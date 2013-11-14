@@ -1,0 +1,24 @@
+{
+  "name": "swipetest",
+  "description": "A Generic Odds Banner project",
+  "version": "0.0.43",
+  "date": "2013-11-03 22:58:21 +00:00",
+  "main": "Gruntfile.js",
+  "homepage": "http://www.sportsbet.com.au",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-bumpup": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-usemin": "~0.1.10",
+    "matchdep": "latest"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Kim Holland - blogstuff@tripleaxis.com",
+  "license": "BSD"
+}

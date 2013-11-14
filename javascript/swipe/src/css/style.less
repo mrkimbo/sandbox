@@ -1,0 +1,329 @@
+/* -------------------------------------------------------------------------- */
+/* Default CSS stylesheet for odds rotator banners.
+
+
+/* -------------------------------------------------------------------------- */
+/* Imports - remove if not required*/
+@import "elements";
+@import "AFL-Flags";
+/*@import "NRL-Flags";*/
+@import "library";
+@import "http://fonts.googleapis.com/css?family=Open+Sans:700";
+
+/* -------------------------------------------------------------------------- */
+/* Common Variables */
+@banner-width: 320px;
+@banner-height: 360px;
+
+@yellow : #FAD701;
+@border-width: 0px;
+@corner-radius : 0px;
+@border: @border-width solid #D2D2D2;
+@width: @banner-width - (@border-width*2);
+@height: @banner-height - (@border-width*2);
+
+@container-width: 320px;
+@container-height: 320px;
+
+/* -------------------------------------------------------------------------- */
+/* Use trace layer for design guide */
+#trace {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: .5;
+
+  width: @banner-width;
+  height: @banner-height;
+  //background: url(trace-img.jpg) no-repeat;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Generic styles */
+a img { border: none; }
+.btn { cursor: pointer; }
+.disabled {
+  opacity: .2;
+  cursor: default !important;
+}
+.hidden { display: none; }
+sup {
+  font-size: 10px;
+  position: relative;
+  top: 2px;
+}
+
+.transition {
+  -webkit-transition : .5s all;
+  -moz-transition    : .5s all;
+  -o-transition      : .5s all;
+  -ms-transition     : .5s all;
+  transition         : .5s all;
+}
+
+.no-transition {
+  -webkit-transition: none !important;
+  -moz-transition   : none !important;
+  -o-transition     : none !important;
+  -ms-transition    : none !important;
+  transition        : none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Main Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 13px;
+
+  background: #E7E7E7;
+  margin: 0px;
+}
+
+#loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -12px 0 0 -15px;
+  z-index: 5;
+}
+
+#main {
+  position: relative;
+  width: @width;
+  height: @height;
+  border: @border;
+  .rounded(@corner-radius);
+
+  background: #FFFFFF;
+
+  h4 {
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 11px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    margin: 0;
+    padding: 4px 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROTATOR SECTION */
+
+#data-container {
+  position: relative;
+  width: @container-width;
+  height: @container-height;
+  overflow: hidden;
+
+  margin-bottom: 8px;
+
+  .data-wrapper {
+    position: relative;
+    float: left;
+    width: @container-width;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #slider {
+    /*-webkit-transform           : translate3d(0, 0, 0);
+    -moz-transform              : translate3d(0, 0, 0);
+    -ms-transform               : translate3d(0, 0, 0);
+    -o-transform                : translate3d(0, 0, 0);
+    transform                   : translate3d(0, 0, 0);
+
+    -webkit-backface-visibility : hidden;
+    -moz-backface-visibility    : hidden;
+    -ms-backface-visibility     : hidden;
+    -o-backface-visibility      : hidden;
+    backface-visibility         : hidden;
+
+    -webkit-perspective         : 1000;
+    -moz-perspective            : 1000;
+    -ms-perspective             : 1000;
+    -o-perspective              : 1000;
+    perspective                 : 1000;*/
+
+    position                    : absolute;
+    width                       : (@container-width * 2) + 10;
+    height                      : 100%;
+    left                        : 0;
+  }
+
+  .page {
+    float: left;
+    width: @container-width;
+    height : 100%;
+
+    position: relative;
+    text-align: center;
+
+    cursor: pointer;
+
+    .group {
+      padding: 3px 0 3px 0;
+      border-bottom: 1px dashed #999;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .item {
+
+      width: 242px;
+      height: 27px;
+      margin: 0 auto 7px auto;
+
+      line-height: 27px;
+
+      border: 1px solid #D2D2D2;
+      .rounded(@corner-radius);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      >div {
+        float: left;
+      }
+
+      .name {
+        text-indent: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .flag {
+        margin: 2px 0 0 2px;
+      }
+
+      .odds {
+        float: right;
+
+        width: 60px;
+        height: 100%;
+        background: transparent url(../img/odds-back.png) no-repeat;
+
+        font-weight: bold;
+        color: #FFFFFF;
+
+        margin: 0;
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* CONTROLS SECTION */
+
+#controls {
+  position: absolute;
+  display: none;
+
+  width: 100%;
+  height: 20px;
+  bottom: 0;
+
+  text-align: center;
+
+  >div {
+    display: inline-block;
+  }
+
+  .page-btn {
+    display: inline-block;
+    width: 9px;
+    height: 12px;
+
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+
+    &.prev {
+      float: left;
+      background: url(../img/left.png) center center no-repeat;
+    }
+    &.next {
+      float: right;
+      background: url(../img/right.png) center center no-repeat;
+    }
+  }
+
+  .nav {
+    height: 100%;
+
+    ul {
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      display: inline-block;
+      width: 16px;
+      height: 100%;
+
+      list-style: none;
+      background: url(../img/nav-dot.png) center center no-repeat;
+      opacity: .4;
+      cursor: pointer;
+
+      &:hover {
+        opacity:.6
+      }
+      &.selected {
+        opacity:1;
+        cursor:default !important;
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Fallback section */
+#fallback {
+
+  position: absolute;
+  width: 298px;
+  top: 78px;
+
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+
+  p {
+    line-height: 24px;
+    padding: 0 10px 0 10px;
+    margin: 0;
+  }
+
+  .bet-btn {
+    display: inline-block;
+  }
+
+  a:link,
+  a:active,
+  a:visited {
+    font-weight: bold;
+    line-height: 18px;
+    color: #000;
+    text-decoration: none;
+  }
+}
+
+
+#log {
+  width: 320px;
+  height: 76px;
+  border: 1px solid #000000;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}

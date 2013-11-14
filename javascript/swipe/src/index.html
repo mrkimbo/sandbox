@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SwipeTest</title>
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="date" content="" />
+  <!-- build:css style.min.css -->
+  <link href="css/style.css" rel="stylesheet" type="text/css"/>
+  <!-- endbuild -->
+</head>
+<body>
+
+<!-- banner elements -->
+<div id="main">
+
+  <!-- preloader until xml feed data is loaded and populated -->
+  <div id="loader"><img src="img/loader.gif"></div>
+
+  <h4 id="title"></h4>
+
+  <!-- LIVE ODDS DATA SECTION -->
+  <div id="data-container">
+
+    <!-- odds data from xml -->
+    <div class="data-wrapper">
+      <div id="slider">
+        <!-- data populated from feed -->
+      </div>
+    </div>
+
+  </div>
+
+  <!--<span id="cta-btn" class="sb-btn"><a href="#" onclick="return false;">Example Button</a></span>-->
+
+  <div id="controls">
+    <div id="prev-btn" class="page-btn prev"></div>
+
+    <div id="nav" class="nav">
+      <ul>
+        <!-- populated automatically in main.js -->
+      </ul>
+    </div>
+
+    <div id="next-btn" class="page-btn next"></div>
+  </div>
+
+</div>
+
+<textarea id="log"></textarea>
+
+<!-- FALLBACK CONTENT -->
+<div id="fallback" style="display: none;">
+  <p>Fallback copy goes here.</p>
+  <div class="sb-btn bet-btn"><a href="#" onclick="return false;">MORE ODDS</a></div>
+</div>
+
+<!-- Free-Bet Template -->
+<script id="item-template" type="text/template">
+  <div class="item">
+    <!--<div class="flag {FLAG}"></div>-->
+    <div class="name">{NAME}</div>
+    <div class="odds">{ODDS}</div>
+  </div>
+</script>
+
+<!-- CDN Scripts -->
+<script src="http://s0.2mdn.net/ads/studio/Enabler.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/plugins/CSSPlugin.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/easing/EasePack.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenLite.min.js"></script>
+<!-- build:js main.min.js -->
+<script src="js/hammer.min.js" data-description="Touch/Gesture Framework"></script>
+<script src="js/parser.min.js" data-description="Feed Parser Library"></script>
+<script src="js/rotator.js" data-description="Paging Functionality"></script>
+<script src="js/utils.js" data-description="Common utils"></script>
+<script src="js/dynamicContent.js" data-description="Double-Click Dynamic Content Vars"></script>
+<script src="js/navigation.js" data-description="Interaction functionality"></script>
+<script src="js/main.js" data-description="Main Entry Point"></script>
+<!-- endbuild -->
+
+<script>
+
+  // initialise double click enabler
+  Enabler.isInitialized() ? init() :
+    Enabler.addEventListener(studio.events.StudioEvent.INIT, function(){
+      init();
+    });
+
+  /*
+   * This is called once Enabler has initialised.
+   * If dynamic data is available, it will be ready now.
+   */
+  function getConfig()
+  {
+    // dynamic data example //
+    /*return JSON.parse(
+        dynamicContent.INSERT_NAME_OF_SHEET_HERE[0].odds
+    );*/
+
+    // static data example //
+    return {
+      duration: 15,
+      filters: [
+        {
+          classID: 'RacingFutures',
+          //competitionID: [],
+          //roundID: [],
+          eventID: [965190],
+          //market: ['fixed odds']
+          limit: 1
+        },
+        {
+          classID: 'Racing',
+          market: ['fixed odds'],
+          limit: 5
+        }
+      ]
+    };
+  }
+
+</script>
+
+</body>
+</html>

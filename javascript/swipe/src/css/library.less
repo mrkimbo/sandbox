@@ -1,0 +1,52 @@
+@import "elements";
+
+.sb-btn {
+
+  /*
+  place an 'a' tag inside the button div to prevent highlighting on rapid
+  or double-clicks.
+  */
+
+  @v-pad: 5;
+  @h-pad: 8;
+
+  width: auto;
+  height: unit(30-(@v-pad*2),px);
+  padding: unit(@v-pad,px) unit(@h-pad,px) unit(@v-pad,px) unit(@h-pad,px);
+
+  .rounded(3px);
+  .gradient(#FAD701,#FAA71C,#FAD701);
+
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px #FFC;
+  filter: dropshadow(color=#FFC, offx=1, offy=1);
+  color: #242424;
+
+  cursor: pointer;
+  text-transform: uppercase;
+
+  &:hover {
+    .gradient(#F2CB05,#D9A03F,#F2CB05);
+    color: #000000;
+  }
+  &:active {
+    .gradient(#BFA302,#BF8C39,#BFA302);
+    color: #000000;
+  }
+  &.disabled {
+    background: #ABABAB;
+    opacity: .5;
+    cursor: default !important;
+    color: #666666;
+  }
+
+  a {
+    text-decoration: none;
+    color: #242424;
+  }
+}
+
+.sportsbet-gradient {
+  .gradient(#1983C0,#2DA8DC,#035CA3);
+}
