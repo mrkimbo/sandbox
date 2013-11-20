@@ -8,17 +8,37 @@
 
 var _raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
 var scrollDiv = document.getElementById('scroll');
 var contentDiv = document.getElementById('content');
 var ball = document.getElementById('ball');
+var bg = document.querySelector('#content .bg');
+var mountain = document.querySelector('#content .mountain');
+
 var maxscroll = scrollDiv.scrollHeight-scrollDiv.clientHeight;
 var pos, diff, v = 0;
 var touchPoint = {x:ball.clientWidth *.5,y:ball.clientHeight *.5};
-var spd = .01, vx,vy, dx,dy;
+var spd = .01, vx =0,vy = 0, dx = 0,dy = 0;
 var LEFT = -1, RIGHT = 1, UP = -1, DOWN = 1;
 var dragging = false;
 
 var ballXY = {width:ball.clientWidth *.5,height:ball.clientHeight *.5};
+var scrollDest = -1, scrollDiff = 0;
+var dirty = true;
+
+var ballPath = [
+  {x:0,y:0,scale:1},{x:143,y:-67,scale:1},{x:314,y:-11,scale:1},
+  {x:479,y:-33,scale:1},{x:725,y:-92,scale:1},{x:914,y:-23,scale:1},
+  {x:996,y:-22,scale:1},{x:1091,y:-61,scale:1},{x:1161,y:-52,scale:1},
+  {x:1405,y:-93,scale:1},{x:1679,y:0,scale:0}
+];
+var tween = TweenMax.to(ball, 100, {
+  bezier: { values:ballPath, autoRotate:false },
+  rotationX: 359,
+  paused: true,
+  ease: Linear.easeNone
+});
+tween.progress(0);
 
 
 var log = function(args)
@@ -29,12 +49,25 @@ var log = function(args)
   }
 }
 
+document.getElementById('nav').addEventListener('click',onNavClick);
+
+function onNavClick(evt)
+{
+  var id = evt.target.id.substr(-1);
+  scrollDest = Math.min(
+    parseInt(getComputedStyle(document.getElementById('s' + id)).top.replace(/px$/,'')) - (screen.availHeight*.3),
+    maxscroll
+  );
+  dirty = true;
+}
+
 // Add content scrollwheel listener to update scrolldiv position //
 contentDiv.addEventListener('mousewheel',onContentScroll,false);
 function onContentScroll(evt)
 {
   spd = .01;
-  scrollDiv.scrollTop -= evt.wheelDelta*.5;
+  scrollDest = scrollDiv.scrollTop - (evt.wheelDelta*.5);
+  dirty = true;
 }
 
 /*Hammer(contentDiv,{
@@ -61,13 +94,16 @@ function handleSwipe(evt)
   switch(evt.type)
   {
     case 'swipeleft':
-      scrollDiv.scrollTop += 1000;
+      //scrollDiv.scrollTop += 1000;
+      scrollDest = scrollDiv.scrollTop + 1000;
       break;
 
     case 'swiperight':
-      scrollDiv.scrollTop -= 1000;
+      //scrollDiv.scrollTop -= 1000;
+      scrollDest = scrollDiv.scrollTop - 1000;
       break;
   }
+  dirty = true;
 }
 
 function handleDrag(evt)
@@ -105,49 +141,68 @@ function handleDrag(evt)
 
       break;
   }
-  _raf(update);
+  dirty = true;
 }
 
 
 // Add scroll listener to trigger redraws //
 scrollDiv.onscroll = function(){
-  _raf(update);
+  dirty = true;
 }
 
 update();
 
 function update()
 {
-  pos = scrollDiv.scrollTop/maxscroll;
-  if(Math.abs(pos-v)<.0001) v = pos;
-  if(v!=pos)
-  {
-    v += (pos-v)*spd;
+  if(!dirty){
+    _raf(update);
+    return;
   }
 
+  if(scrollDest != -1)
+  {
+    scrollDiff = scrollDest-scrollDiv.scrollTop;
+    if(Math.abs(scrollDiff)<=1) {
+      scrollDiv.scrollTop = scrollDest;
+      scrollDest = -1;
+    }
+    if(Math.abs(scrollDiff) > 0)
+    {
+      scrollDiv.scrollTop += scrollDiff > 0 ?
+        Math.ceil(scrollDiff *.05) : Math.floor(scrollDiff *.05);
+      //log('scrolldiff: ' + scrollDiff);
+    }
+  }
+
+  v = scrollDiv.scrollTop/maxscroll;
   //log('update: ' + v.toFixed(3) + ',' + pos);
-  document.querySelector('#s1 .bg').style.backgroundPosition = (v*650) + '% 0%';
-  document.querySelector('#s1 .mountain').style.backgroundPosition = -(v*500) + '% 0%';
+  bg.style.backgroundPosition = (10000*v) + '% 0%';
+  //mountain.style.backgroundPosition = -(5000*v) + '% 0%';
 
   if(!dragging && Math.abs(vx)+Math.abs(vy)>0)
   {
     //log(vx,vy);
     touchPoint.x += 20*vx;
     touchPoint.y += 20*vy;
-    vx*=.98
-    vy*=.98;
+    vx*=.9
+    vy*=.9;
     if(Math.abs(vx)<.01) vx = 0;
     if(Math.abs(vy)<.01) vy = 0;
 
     constrainBall();
   }
 
-  ball.style.left = touchPoint.x-ballXY.width + 'px';
-  ball.style.top =  touchPoint.y-ballXY.height + 'px';
+  //ball.style.left = touchPoint.x-ballXY.width + 'px';
+  //ball.style.top =  touchPoint.y-ballXY.height + 'px';
 
-  //scrollDiv.scrollTop ++;//
+  tween.progress(v);
 
-  if(v!=pos || (Math.abs(vx)+Math.abs(vy))>0) _raf(update);
+  if((Math.abs(vx)+Math.abs(vy))+Math.abs(scrollDiff) == 0)
+  {
+    dirty = false;
+  }
+
+  _raf(update);
 }
 
 function constrainBall()

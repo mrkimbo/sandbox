@@ -1,8 +1,8 @@
 
 html, body {
-  -webkit-transform: translate3d(0, 0, 0);
+  /*-webkit-transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;
+  -webkit-perspective: 1000;*/
 
   height: 100%;
   margin: 0;
@@ -10,28 +10,53 @@ html, body {
 }
 
 #scroll {
+  position: relative;
   height: 100%;
   overflow: auto;
 
   .scrollHeight {
-    height: 4000%;
+    //height: 9000px;
+  }
+  .layer {
+    height: 800px;
   }
 }
 
-#ball {
-  /*-webkit-transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;*/
-
+.ball-container {
   position: absolute;
-  top: 0;
+  bottom: 260px;
   left: 0;
   z-index: 1;
+}
 
+#ball {
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+
+  position: absolute;
   cursor: pointer;
 
   img {
     display: block;
+  }
+}
+
+nav {
+  position: absolute;
+  top: 5px;
+  left: 500px;
+  text-align: center;
+
+  ul, li { margin: 0; padding: 0}
+  li {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 5px 10px;
+    background: rgba(0,0,0,.5);
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
   }
 }
 
@@ -41,27 +66,12 @@ html, body {
   -webkit-perspective: 1000;*/
 
   position: absolute;
-  //right : 15px; // shift content left to show scroll bar //
+  right : 15px; // shift content left to show scroll bar //
   top: 0;
   width: 100%;
   height: 100%;
-  background: dimgray;
   overflow: hidden;
-}
 
-.layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-}
-
-.abs {
-  position: absolute;
-}
-
-#s1 {
-  background: darkcyan;
   .bg {
     width: 100%;
     height: 100%;
@@ -75,24 +85,37 @@ html, body {
     //-webkit-transition: all .5s;-moz-transition: all .5s;-ms-transition: all .5s;-o-transition: all .5s;transition: all .5s;
   }
 }
+
+.layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.abs {
+  position: absolute;
+}
+
+#s0 {
+  top: 0px;
+}
+#s1 {
+  top: 2800px;
+}
 #s2 {
-  background: darkgreen;
+  top: 5600px;
 }
 #s3 {
-  background: darkolivegreen;
-}
-#s4 {
-  background: darkgoldenrod;
+  top: 8400px;
 }
 
 h1 {
-  /*position: relative;
-  top: 50%;
-  margin-top: -10px;
+  position: relative;
 
   font-size: 60px;
   color: #E6E6E6;
-  text-shadow: -2px 2px 1px #000;*/
+  text-shadow: -2px 2px 1px #000;
 }
 
 .hidden {

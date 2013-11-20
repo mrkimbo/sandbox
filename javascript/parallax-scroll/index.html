@@ -6,28 +6,39 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<div id="ball">
-  <img src="img/ball.png" />
+<div class="ball-container">
+  <div id="ball">
+    <img src="img/ball-small.png" />
+  </div>
+</div>
+<div id="content">
+  <div class="layer">
+    <div class="bg abs"></div>
+    <div class="mountain abs"></div>
+  </div>
 </div>
 <section id="scroll">
   <div class="scrollHeight"></div>
-</section>
-<div id="content">
+  <div id="s0" class="layer"></div>
   <div id="s1" class="layer">
-    <div class="bg abs"></div>
-    <div class="mountain abs"></div>
-    <h1>A-LEAGUE SPECIAL</h1>
-  </div>
-  <div id="s2" class="layer hidden">
     <h1>IF YOUR MATCH FINISHES IN A DRAW</h1>
   </div>
-  <div id="s3" class="layer hidden">
+  <div id="s2" class="layer">
     <h1>WE'LL REFUND LOSING FIRST GOALSCORER BETS!</h1>
   </div>
-  <div id="s4" class="layer hidden">
+  <div id="s3" class="layer">
     <h1>FREE BET UP TO $650*</h1>
   </div>
-</div>
+</section>
+<nav id="nav">
+  <ul>
+    <li id="nav-0">Top</li>
+    <li id="nav-1">One</li>
+    <li id="nav-2">Two</li>
+    <li id="nav-3">Three</li>
+  </ul>
+</nav>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.1/TweenMax.min.js"></script>
 <script type="text/javascript" src="js/hammer.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
