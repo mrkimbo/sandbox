@@ -1,0 +1,163 @@
+.sb-btn {
+  /*
+  place an 'a' tag inside the button div to prevent highlighting on rapid
+  or double-clicks.
+  */
+  width: auto;
+  height: 20px;
+  padding: 5px 8px 5px 8px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background: #fad701;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #faa71c), color-stop(1, #fad701));
+  background: -ms-linear-gradient(bottom, #faa71c, #fad701);
+  background: -moz-linear-gradient(center bottom, #faa71c 0%, #fad701 100%);
+  background: -o-linear-gradient(#fad701, #faa71c);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fad701', endColorstr='#faa71c', GradientType=0);
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px #FFC;
+  filter: dropshadow(color=#ffffcc, offx=1, offy=1);
+  color: #242424;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.sb-btn:hover {
+  background: #f2cb05;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #d9a03f), color-stop(1, #f2cb05));
+  background: -ms-linear-gradient(bottom, #d9a03f, #f2cb05);
+  background: -moz-linear-gradient(center bottom, #d9a03f 0%, #f2cb05 100%);
+  background: -o-linear-gradient(#f2cb05, #d9a03f);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2cb05', endColorstr='#d9a03f', GradientType=0);
+  color: #000000;
+}
+.sb-btn:active {
+  background: #bfa302;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #bf8c39), color-stop(1, #bfa302));
+  background: -ms-linear-gradient(bottom, #bf8c39, #bfa302);
+  background: -moz-linear-gradient(center bottom, #bf8c39 0%, #bfa302 100%);
+  background: -o-linear-gradient(#bfa302, #bf8c39);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bfa302', endColorstr='#bf8c39', GradientType=0);
+  color: #000000;
+}
+.sb-btn.disabled {
+  background: #ABABAB;
+  opacity: .5;
+  cursor: default !important;
+  color: #666666;
+}
+.sb-btn a {
+  text-decoration: none;
+  color: #242424;
+}
+.sportsbet-gradient {
+  background: #1983c0;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #2da8dc), color-stop(1, #035ca3));
+  background: -ms-linear-gradient(bottom, #2da8dc, #035ca3);
+  background: -moz-linear-gradient(center bottom, #2da8dc 0%, #035ca3 100%);
+  background: -o-linear-gradient(#035ca3, #2da8dc);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#035ca3', endColorstr='#2da8dc', GradientType=0);
+}
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: red;
+}
+.animate {
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+#content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+#page-container {
+  position: relative;
+  width: 10000px;
+  height: 100%;
+  left: 0px;
+  -webkit-transform: translate3d(0%, 0px, 0px) scale3d(1, 1, 1);
+}
+#page-container .page {
+  position: relative;
+  display: inline-block;
+  width: 310px;
+  height: 100%;
+  text-align: center;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#page-container .page .page-tab {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 20px;
+  right: 0px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background: transparent url(../img/page-tab.png) no-repeat;
+  background-position: 100% 0px;
+}
+#page-container .page h1 {
+  color: white;
+  font-size: 30px;
+}
+#page1 {
+  background-color: #00549E;
+}
+#page2 {
+  background-color: #2270B4;
+}
+#page3 {
+  background-color: #2EAADD;
+}
+#page4 {
+  background-color: #F2B91C;
+}
+#footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  padding: 8px 8px 6px 8px;
+  border-top: 1px solid #117DCF;
+  z-index: 9;
+}
+#logo {
+  position: relative;
+  top: 4px;
+  left: 10px;
+}
+#bet-now {
+  float: right;
+  height: auto;
+  padding: 6px 8px;
+  margin-right: 20px;
+  border: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  font-weight: 800;
+  font-size: 16px;
+  text-shadow: none;
+}
+#bet-now:after {
+  content: '';
+  clear: both;
+}
