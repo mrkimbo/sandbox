@@ -6,7 +6,6 @@
  */
 
 var nav, prevBtn, nextBtn, controls;
-var INTERACTION = 'Event:onInteraction';
 
 /*
  * Setup interactions:
@@ -30,7 +29,7 @@ function initControls() {
   enablePauseResume();
   enableDotNavigation();
   enableLeftRightNavigation();
-  rotator.enableSwipeNavigation();
+  if(isTouchEnabled()) rotator.enableSwipeNavigation();
 }
 
 /**

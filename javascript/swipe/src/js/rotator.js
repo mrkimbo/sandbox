@@ -25,6 +25,9 @@ var Rotator = function(containerElement, pageTemplateId, isMobile)
   this._pageDelay   = 2000;
   this._isMobile    = isMobile === true;
 
+  // flag for determining if page changed via touch //
+  this._touchDriven = false;
+
   EventDispatcher.init(this);
 
   // Create public accessors for internal properties //
@@ -51,8 +54,10 @@ Rotator.RIGHT = 1;
 /** @const {string} */
 Rotator.ALIGN = 'TOP'; // accepted values: TOP,MIDDLE,BOTTOM
 
-/** @const @type {string}*/
+/** @const @type {string} */
 Rotator.CHANGE = 'Rotator:onChange';
+/** @const @type {string} */
+Rotator.TOUCH = 'Rotator:onTouchInteraction';
 
 /**
  * Set initial properties and start rotation.
@@ -100,17 +105,16 @@ Rotator.prototype.init = function(results, pageSize, maxPages, onePerPage)
  */
 Rotator.prototype._createPages = function()
 {
-
-    var i=0, len=0, market, evts, html;
-    while(i<Math.min(this._results.length,this._maxPages))
+  var i=0, len=0, market, evts, html;
+  while(i<Math.min(this._results.length,this._maxPages))
+  {
+    // reset //
+    if(!html)
     {
-      // reset //
-      if(!html)
-      {
-        var col = 0xFFFFFF;//Math.round(0xCCCCCC + (Math.random()*(0xFFFFFF-0xCCCCCC))).toString(16);
-        html = '<div class="page" data-id="' + this._pages.length + '" style="background-color:#' + col + '">';
-        len = 0;
-      }
+      html = '<div class="page" data-id="' + this._pages.length + '">';
+      len = 0;
+    }
+
     // Grab event's selections and chop to fit page if required //
     market = this._results[i];
     evts = toArray(market.EventSelections).slice(0,this._pageSize);
@@ -272,7 +276,7 @@ Rotator.prototype._createNextItem = function(idx)
     );
     this._container.style.left = (
       parseInt(this._container.style.left.replace(/px$/i,'')) -
-       this._nextItem.clientWidth) + 'px';
+        this._nextItem.clientWidth) + 'px';
   }
 
   // Align page content //
@@ -284,7 +288,9 @@ Rotator.prototype._createNextItem = function(idx)
  */
 Rotator.prototype._clearNextPage = function()
 {
+  this._touchDriven = false;
   if(!this._nextItem) return;
+
   this._nextItem.parentNode.removeChild(this._nextItem);
   this._nextItem = this._anim = null;
   this._container.style.left = 0;
@@ -310,6 +316,7 @@ Rotator.prototype._animate = function(dir, opt_speed)
       index: this._index,
       element: this._nextItem,
       data: this._results[this._index],
+      touch: this._touchDriven,
       target: this
     });
   }
@@ -324,7 +331,7 @@ Rotator.prototype._animate = function(dir, opt_speed)
         onComplete: bind(this._animComplete,this)
       }
     );
-  } else{
+  } else {
     this._animComplete();
   }
 }
@@ -360,23 +367,24 @@ Rotator.prototype._alignPage = function()
  */
 Rotator.prototype._animComplete = function()
 {
-  if(!this._nextItem) return;
-
   if(this._currentItem)
     this._currentItem.parentNode.removeChild(this._currentItem);
   this._currentItem = this._nextItem;
   this._nextItem = this._anim = null;
   this._container.style.left = 0;
 
-  // Dispatch Change Event //
+  // Dispatch page-change event for mobile devices //
   if(this._isMobile){
     this.dispatchEvent(Rotator.CHANGE, {
       index: this._index,
       element: this._currentItem,
       data: this._results[this._index],
+      touch: this._touchDriven,
       target: this
     });
   }
+
+  this._touchDriven = false;
 
   if(!this._paused) this._startAuto();
 }
@@ -439,23 +447,26 @@ Rotator.prototype.enableSwipeNavigation = function()
  */
 Rotator.prototype._handleTouchEvent = function(evt)
 {
+  // If an animation is already in progress, then ignore other events //
+  if(this._anim) return;
+
   // disable default browser scrolling //
   evt.gesture.preventDefault();
 
-  // If an animation is already in progress, then ignore other events //
-  if(this._anim) return;
+  // Mark as touch driven //
+  this._touchDriven = true;
 
   //log(evt.type);
   switch(evt.type)
   {
     case 'touch':
       var event = document.createEvent('Event');
-      event.initEvent('interaction',true)
+      event.initEvent(Rotator.TOUCH,true);
       this._container.dispatchEvent(event);
       break;
 
     case 'dragleft':
-      if(this._lastDir != Rotator.LEFT) this._clearNextPage();
+      if(this._lastDir == Rotator.RIGHT) this._clearNextPage();
       if(!this._nextItem) {
         this._createNextItem(this._index+1);
         this._lastDir = Rotator.LEFT;
@@ -464,7 +475,7 @@ Rotator.prototype._handleTouchEvent = function(evt)
       break;
 
     case 'dragright':
-      if(this._lastDir != Rotator.RIGHT) rotator._clearNextPage();
+      if(this._lastDir == Rotator.LEFT) rotator._clearNextPage();
       if(!this._nextItem) {
         this._createNextItem(this._index-1);
         this._lastDir = Rotator.RIGHT;
@@ -473,20 +484,22 @@ Rotator.prototype._handleTouchEvent = function(evt)
       break;
 
     case 'swipeleft':
+      this._nextItem ? this._animate(Rotator.LEFT) : this.prev();
       evt.gesture.stopDetect();
-      if(!this._nextItem) this._createNextItem(this._index+1);
-      this._animate(Rotator.LEFT);
       break;
 
     case 'swiperight':
+      this._nextItem ? this._animate(Rotator.RIGHT) : this.next();
       evt.gesture.stopDetect();
-      if(!this._nextItem) this._createNextItem(this._index-1);
-      this._animate(Rotator.RIGHT);
       break;
 
     case 'release':
-      if(!this._nextItem) break;
-      if(Math.abs(evt.gesture.deltaX) > (this._nextItem.clientWidth *.3))
+      if(!this._nextItem){
+        this._touchDriven = false;
+        break;
+      }
+
+      if(Math.abs(evt.gesture.deltaX) > (this._nextItem.clientWidth *.5))
       {
         this._animate(this._lastDir,.3);
       }

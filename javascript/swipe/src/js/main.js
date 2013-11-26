@@ -60,7 +60,7 @@ function onFail(evt)
  */
 function onPageChange(evt)
 {
-  //log('onPageChange() - ' + evt.index + ', ' + evt.data.parent.EventName);
+  log('onPageChange() - ' + evt.index + ', ' + evt.touch);
   if(document.querySelector('#title'))
     document.querySelector('#title').textContent = evt.data.parent.EventName;
 }

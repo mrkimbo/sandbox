@@ -57,12 +57,8 @@ function hover(el, overFn, outFn)
   // trap for browser/frame mouseout (relatedTarget == null) //
   document.addEventListener('mouseout', _out);
 
-  // If on touch device, add window blur listener to restart animations //
-  if(isTouchEnabled())
-  {
-    document.addEventListener('interaction', _ovr);
-    //window.addEventListener('blur', _out);
-  }
+  // If on touch device, listen for touch on rotator to pause animations //
+  document.addEventListener(Rotator.TOUCH, _ovr);
 }
 
 /**
