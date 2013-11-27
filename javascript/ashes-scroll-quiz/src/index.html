@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>Ashes Scroll Quiz</title>
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="date" content="" />
+  <!-- build:css style.min.css -->
+  <link href="css/style.css" rel="stylesheet" type="text/css"/>
+  <!-- endbuild -->
+</head>
+<body>
+<div id="main-container">
+
+  <div id="header" class="sportsbet-gradient">
+    <div class="container">
+      <img id="logo" src="img/sportsbet-logo.png" />
+      <button id="join-btn" class="sb-btn">JOIN NOW</button>
+      <div id="score">0/3</div>
+      <div id="timer">00:00:00</div>
+
+      <!--[if lt IE 9]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser.
+        Please <a
+            href="http://browsehappy.com/">upgrade your browser</a> to improve your
+        experience.</p>
+      <![endif]-->
+
+    </div>
+  </div>
+
+  <div id="content">
+
+    <div id="page-container" class="container">
+
+      <div id="page1" class="page">
+        <div class="group">
+          <div class="group text">
+            <div class="subtitle">HOW MUCH DO YOU KNOW ABOUT</div>
+            <div class="title yellow">CRICKET?
+              <div class="underline"></div>
+            </div>
+          </div>
+          <div class="group options">
+            <ul>
+              <li data-correct="1">EVERYTHING</li>
+              <li>A FAIR BIT</li>
+              <li>IT'S AN INSECT</li>
+            </ul>
+          </div>
+        </group>
+      </div>
+      <div id="page2" class="page hidden">
+        Page2
+      </div>
+      <div id="page3" class="page hidden">
+        Page3
+      </div>
+      <div id="page4" class="page hidden">
+        Page4
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- CDN Scripts -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
+<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+<!-- build:js main.min.js -->
+<script src="js/classes.js" data-description="Supporting classes"></script>
+<script src="js/classListPolyFill.js" data-description="ClassList PolyFill"></script>
+<script src="js/utils.js" data-description="General Utils"></script>
+<script src="js/anim.js" data-description="Animations"></script>
+<script src="js/main.js" data-description="Main Entry Point"></script>
+<!-- endbuild -->
+</body>
+</html>

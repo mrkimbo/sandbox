@@ -1,0 +1,23 @@
+{
+  "name": "Ashes-Scroll-Quiz",
+  "description": "Interactive, scrollable Ashes quiz",
+  "version": "0.0.0",
+  "date": "2013-11-27 10:00:00 +00:00",
+  "main": "Gruntfile.js",
+  "homepage": "http://www.sportsbet.com.au",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-usemin": "~0.1.10",
+    "matchdep": "latest"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Kim Holland - blogstuff@tripleaxis.com",
+  "license": "BSD"
+}
