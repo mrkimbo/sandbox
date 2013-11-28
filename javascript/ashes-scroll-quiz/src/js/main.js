@@ -8,16 +8,16 @@
 
 // --------------------------- INITIALISATION ------------------------------- //
 var elements = {
-  root: document.getElementById('main-container'),
-  header: document.getElementById('header'),
-  content: document.getElementById('content'),
-  container: document.getElementById('page-container'),
-  pages: Array.prototype.constructor.apply(
-    null, document.querySelectorAll('.page')
-  )
+  root: document.find('#main-container'),
+  header: document.find('#header'),
+  scrollBox: document.find('#scroll-box'),
+  scroll: document.find('#scroll'),
+  container: document.find('#page-container'),
+  pages: document.findAll('.page'),
+  btns: document.findAll('.options .btn')
 }
 var answers = [0,0,0];
-var dirty = false;
+var dirty = false, pos;
 var maxScroll;
 var screenSize = new Rect();
 
@@ -25,15 +25,34 @@ init();
 
 function init()
 {
-  var options;
-  elements.pages.forEach(function(item){
-    options = Array.prototype.constructor.apply(
-      null,item.querySelectorAll('.options li')
-    );
-    options.forEach(function(btn){
-      btn.addEventListener('click',optionClickHandler,false);
+  Hammer(
+    elements.root,{
+      drag_max_touches: 1,
+      drag_block_horizontal: true,
+      drag_lock_to_axis: true
+    }
+  ).on('touch dragup dragdown swipeup swipedown release',handleTouchEvent);
+
+  elements.scrollBox.addEventListener('scroll',redraw,false);
+
+  elements.scrollBox.addEventListener('click',function(evt){
+    //log(evt);
+    var style;
+    elements.btns.forEach(function(item){
+      style = getComputedStyle(item);
+      //log('btn: ' + style.left + ',' + style.top + ', click: ' + evt.pageX + ',' + evt.pageY);
     });
   });
+
+  document.findAll('nav .btn').forEach(function(item){
+    item.addEventListener('click', function(evt){
+      log('click');
+      var t = MainTimeline.getLabelTime('Page' + evt.target.id.match(/[0-9]/)[0]);
+      scrollTo(maxScroll*(t/MainTimeline.totalTime()));
+    })
+  });
+
+
   window.addEventListener('resize',onResize,false);
   onResize(null);
 }
@@ -46,15 +65,14 @@ function onResize(evt)
 
 function redrawPages()
 {
-  elements.content.style.height = elements.root.clientHeight-78 + 'px';
-  maxScroll = elements.content.scrollHeight - elements.content.clientHeight;
+  elements.scrollBox.style.height = elements.root.clientHeight-78 + 'px';
+  maxScroll = elements.scrollBox.scrollHeight - elements.scrollBox.clientHeight;
 
-  screenSize.width = elements.content.clientWidth;
-  screenSize.height = elements.content.clientHeight;
+  screenSize.width = elements.scrollBox.clientWidth;
+  screenSize.height = elements.scrollBox.clientHeight;
 }
 
 // -------------------------- MAIN UPDATE LOOP ------------------------------ //
-loop();
 function loop()
 {
   if(dirty)
@@ -65,10 +83,50 @@ function loop()
 
   _raf(loop);
 }
+loop();
 
-function redraw()
+function redraw(evt)
 {
-  // layout / update stuff here..
+  // layout / update stuff here.. //
+  pos = getScrollTime();
+  MainTimeline.tweenTo(pos,{timeScale:1});
+}
+
+var lastScrollPos;
+function handleTouchEvent(evt)
+{
+  //log(evt.type);
+  switch(evt.type)
+  {
+    case 'touch':
+      if(evt.target instanceof HTMLButtonElement){
+        return;
+      }
+
+      lastScrollPos = elements.scrollBox.scrollTop;
+      break;
+
+    case 'dragup':
+    case 'dragdown':
+      scrollTo(lastScrollPos - evt.gesture.deltaY);
+      break;
+
+    case 'swipeup':
+      scrollTo(lastScrollPos + 1000);
+      evt.gesture.stopDetect();
+      break;
+
+    case 'swipedown':
+      scrollTo(lastScrollPos - 1000);
+      evt.gesture.stopDetect();
+      break;
+
+    case 'release':
+      break;
+  }
+
+  // disable default browser scrolling //
+  evt.gesture.preventDefault();
 }
 
 function checkDirty()

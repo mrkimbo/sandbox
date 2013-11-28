@@ -29,6 +29,13 @@ function getTransformProp()
   );
 }
 
+function isTouchEnabled()
+{
+  return !!('ontouchstart' in window);
+}
+
+
+// ---------------------------- SCORE HANDLING ------------------------------ //
 function optionClickHandler(evt)
 {
   var idx = Array.prototype.indexOf.call(

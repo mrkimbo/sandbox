@@ -28,39 +28,71 @@
     </div>
   </div>
 
-  <div id="content">
+  <div id="page-container">
 
-    <div id="page-container" class="container">
-
-      <div id="page1" class="page">
-        <div class="group">
-          <div class="group text">
-            <div class="subtitle">HOW MUCH DO YOU KNOW ABOUT</div>
-            <div class="title yellow">CRICKET?
-              <div class="underline"></div>
-            </div>
+    <div id="page1" class="page">
+      <div class="group">
+        <div class="group text">
+          <div class="subtitle">HOW MUCH DO YOU KNOW ABOUT</div>
+          <div class="title yellow">CRICKET?
+            <div class="underline"></div>
           </div>
-          <div class="group options">
-            <ul>
-              <li data-correct="1">EVERYTHING</li>
-              <li>A FAIR BIT</li>
-              <li>IT'S AN INSECT</li>
-            </ul>
-          </div>
-        </group>
+        </div>
+        <div class="group options">
+          <ul>
+            <li class="btn" data-correct="1">EVERYTHING</li>
+            <li class="btn">A FAIR BIT</li>
+            <li class="btn">IT'S AN INSECT</li>
+          </ul>
+        </div>
       </div>
-      <div id="page2" class="page hidden">
-        Page2
-      </div>
-      <div id="page3" class="page hidden">
-        Page3
-      </div>
-      <div id="page4" class="page hidden">
-        Page4
-      </div>
-
     </div>
+    <div id="page2" class="page">
+      <div class="group">
+        <div class="group text">
+          <div class="subtitle">WHAT DO YOU CALL</div>
+          <div class="title yellow">THESE?</div>
+        </div>
+        <div class="group options">
+          <ul>
+            <li class="btn">BALES</li>
+            <li class="btn" data-correct="1">BAILS</li>
+          </ul>
+        </div>
+        <div class="group bails">
+          <div class="bail"></div>
+          <div class="bail"></div>
+        </div>
+        <div class="group stumps">
+          <div class="stump"></div>
+          <div class="stump"></div>
+          <div class="stump"></div>
+        </div>
+      </div>
+    </div>
+    <!--<div id="page3" class="page hidden">
+      Page3
+    </div>-->
+    <!--<div id="page4" class="page hidden">
+      Page4
+    </div>-->
 
+  </div>
+
+  <div id="scroll-box">
+    <div id="scroll"></div>
+  </div>
+
+
+  <nav>
+    <ul>
+      <li><button id="question1-btn" class="btn">Q1</button></li>
+      <li><button id="question2-btn" class="btn">Q2</button></li>
+    </ul>
+  </nav>
+
+  <div id="debug" class="hidden">
+    <textarea id="debug-text"></textarea>
   </div>
 
 </div>
@@ -69,8 +101,9 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
 <script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
 <!-- build:js main.min.js -->
-<script src="js/classes.js" data-description="Supporting classes"></script>
+<script src="js/hammer.js" data-description="Touch Interaction Framework"></script>
 <script src="js/classListPolyFill.js" data-description="ClassList PolyFill"></script>
+<script src="js/classes.js" data-description="Supporting classes"></script>
 <script src="js/utils.js" data-description="General Utils"></script>
 <script src="js/anim.js" data-description="Animations"></script>
 <script src="js/main.js" data-description="Main Entry Point"></script>

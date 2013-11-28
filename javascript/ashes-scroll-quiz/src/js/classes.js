@@ -29,14 +29,23 @@ var log = function(args)
   if(window.console && window.console.log)
   {
     console.log.apply(console,arguments);
-  }
-}
-
-if(!HTMLElement.prototype.hasOwnProperty('classList'))
-{
-  HTMLElement.prototype.classList = {
-    add: function(el,v){
-      log('add')
+    var field = document.getElementById('debug-text');
+    if(field){
+      var i = arguments.length;
+      while(i--) field.value += arguments[i] + '\n';
+      field.scrollTop = field.scrollHeight;
     }
+  }
+};
+
+// QuerySelector helpers that automatically return results as arrays
+(function(){
+  Element.prototype.find = document.find = function(args){
+    return this.querySelector.apply(this, arguments);
   };
-}
+  Element.prototype.findAll = document.findAll = function(args){
+    var r = this.querySelectorAll.apply(this, arguments);
+    return r.length ? Array.prototype.constructor.apply(null,r) : [];
+  };
+})();
+

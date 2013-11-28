@@ -111,6 +111,31 @@ body {
 .yellow {
   color: #FAD701;
 }
+.btn {
+  width: 185px;
+  height: 56px;
+  background: #F4BA1A;
+  border: none;
+  font-family: 'Roboto Condensed', sans serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 52px;
+  color: #000000;
+  cursor: pointer;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  display: inline-block;
+  list-style: none;
+}
+ul li:last-child {
+  margin: 0 !important;
+}
 .container {
   position: relative;
   display: block;
@@ -124,6 +149,20 @@ body {
   height: 100%;
   overflow: hidden;
   min-width: 1024px;
+  background: #1b516d;
+}
+nav {
+  position: fixed;
+  right: 17px;
+  top: 80px;
+  z-index: 999;
+}
+nav li {
+  display: block;
+  margin-bottom: 2px;
+}
+nav .btn {
+  width: 90px;
 }
 #header {
   position: relative;
@@ -133,6 +172,7 @@ body {
   left: 0;
   text-align: center;
   border-bottom: 1px solid #001A2C;
+  z-index: 1;
 }
 #header .sb-btn {
   position: relative;
@@ -184,26 +224,30 @@ body {
   font-size: 2.5rem;
   cursor: default;
 }
-#content {
+#scroll-box {
+  position: absolute;
   width: 100%;
   height: 100%;
+  top: 78px;
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  -webkit-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-transform-style: preserve-3d;
+  -webkit-overflow-scrolling: none;
   -webkit-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   -moz-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   -o-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   -ms-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
-  text-align: center;
 }
-#page-container {
+#scroll {
   position: relative;
   height: 4000px;
+}
+#page-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: -15px;
+  top: 0;
   -webkit-transform-style: preserve-3d;
   -webkit-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   -moz-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
@@ -223,39 +267,25 @@ body {
   -ms-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
 }
+.page > .group {
+  top: 200px;
+}
 .group {
   display: block;
   position: absolute;
   width: 100%;
   text-align: center;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -moz-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
 }
 .group.text {
   text-align: center;
 }
-.group ul {
-  margin: 0;
-  padding: 0;
-}
-.group ul li {
-  display: inline-block;
-  width: 185px;
-  height: 56px;
-  margin-right: 78px;
-  background: #F4BA1A;
-  list-style: none;
-  font-family: 'Roboto Condensed', sans serif;
-  font-size: 20px;
-  letter-spacing: 1px;
-  text-align: center;
-  line-height: 56px;
-  color: #000000;
-  cursor: pointer;
-}
-.group ul li:last-child {
-  margin-right: 0;
-}
-#page1 > .group {
-  top: 300px;
+#page1 .text {
+  cursor: default;
 }
 #page1 .text .title {
   display: inline-block;
@@ -270,4 +300,73 @@ body {
 }
 #page1 .options {
   margin-top: 280px;
+}
+#page1 .options li {
+  margin-right: 78px;
+}
+#page2 .stumps {
+  opacity: 0;
+  top: 600px;
+}
+#page2 .stumps .stump {
+  display: inline-block;
+  width: 112px;
+  height: 500px;
+  margin-right: 248px;
+  background: url(../img/the_stump.svg) no-repeat;
+  background-size: 112px 1020px;
+}
+#page2 .stumps .stump:last-child {
+  margin-right: 0;
+}
+#page2 .bails {
+  top: -175px;
+}
+#page2 .bails .bail {
+  position: relative;
+  display: inline-block;
+  width: 370px;
+  height: 170px;
+  background: url(../img/the_wicket.svg) no-repeat;
+  background-size: 370px 170px;
+  opacity: 0;
+}
+#page2 .text {
+  opacity: 0;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+#page2 .text .title {
+  line-height: 95px;
+  font-size: 130px;
+  font-size: 13rem;
+}
+#page2 .options {
+  top: 190px;
+}
+#page2 .options li {
+  position: relative;
+  margin-right: 78px;
+  opacity: 0;
+}
+#page2 .options li:first-child {
+  right: 300px;
+}
+#page2 .options li:last-child {
+  left: 300px;
+}
+#debug {
+  position: fixed;
+  width: 100%;
+  top: 78px;
+  left: 0;
+  height: 550px;
+  width: 100px;
+}
+#debug textarea {
+  width: 100%;
+  height: 100%;
 }

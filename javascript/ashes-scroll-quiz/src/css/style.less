@@ -55,6 +55,38 @@ html, body {
   color : #FAD701;
 }
 
+.btn {
+  width          : 185px;
+  height         : 56px;
+
+  background     : #F4BA1A;
+  border         : none;
+
+  font-family    : 'Roboto Condensed', sans serif;
+  font-size      : 20px;
+  letter-spacing : 1px;
+  text-align     : center;
+  text-transform : uppercase;
+  line-height    : 52px;
+  color          : #000000;
+
+  cursor         : pointer;
+}
+
+ul {
+  margin  : 0;
+  padding : 0;
+
+  li {
+    display      : inline-block;
+    list-style   : none;
+
+    &:last-child {
+      margin  : 0 !important;
+    }
+  }
+}
+
 .container {
   position   : relative;
   display    : block;
@@ -67,12 +99,31 @@ html, body {
 // -------------------------------------------------------------------------- //
 
 #main-container {
-  position  : relative;
-  width     : 100%;
-  height    : 100%;
-  overflow  : hidden;
+  position   : relative;
+  width      : 100%;
+  height     : 100%;
+  overflow   : hidden;
 
-  min-width : 1024px;
+  min-width  : 1024px;
+
+  background : @col1;
+}
+
+nav {
+  position : fixed;
+  right    : 17px;
+  top      : 80px;
+
+  z-index: 999;
+
+  li {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .btn {
+    width: 90px;
+  }
 }
 
 // --------------------------------- HEADER --------------------------------- //
@@ -85,6 +136,7 @@ html, body {
 
   text-align    : center;
   border-bottom : 1px solid #001A2C;
+  z-index       : 1;
 
   .sb-btn {
     position    : relative;
@@ -149,26 +201,29 @@ html, body {
 }
 
 // ----------------------------- MAIN CONTENT ------------------------------- //
-#content {
-  width                       : 100%;
-  height                      : 100%;
-  overflow-x                  : hidden;
-  overflow-y                  : auto;
-  -webkit-overflow-scrolling  : touch;
+#scroll-box {
+  position                   : absolute;
+  width                      : 100%;
+  height                     : 100%;
+  top                        : 78px;
+  overflow-x                 : hidden;
+  overflow-y                 : auto;
+  -webkit-overflow-scrolling : none;
 
-  -webkit-user-select         : none;
-  -webkit-user-drag           : none;
-  -webkit-tap-highlight-color : rgba(0, 0, 0, 0);
-
-  -webkit-transform-style     : preserve-3d;
   .transform(translate3d(0%, 0, 0) scale3d(1, 1, 1));
+}
 
-  text-align                  : center;
+#scroll {
+  position : relative;
+  height   : 4000px;
 }
 
 #page-container {
-  position                : relative;
-  height                  : 4000px;
+  position                : absolute;
+  width                   : 100%;
+  height                  : 100%;
+  left                    : -15px;
+  top                     : 0;
 
   -webkit-transform-style : preserve-3d;
   .transform(translate3d(0%, 0, 0) scale3d(1, 1, 1));
@@ -182,6 +237,10 @@ html, body {
 
   -webkit-transform-style : preserve-3d;
   .transform(translate3d(0%, 0, 0) scale3d(1, 1, 1));
+
+  > .group {
+    top : 200px;
+  }
 }
 
 .group {
@@ -190,45 +249,18 @@ html, body {
   width      : 100%;
   text-align : center;
 
+  .transform(translate3d(0%, 0, 0));
+
   &.text {
     text-align : center;
-  }
-
-  ul {
-    margin : 0;
-    padding: 0;
-
-    li {
-      display        : inline-block;
-      width          : 185px;
-      height         : 56px;
-
-      margin-right   : 78px;
-      background     : #F4BA1A;
-      list-style     : none;
-
-      font-family    : 'Roboto Condensed', sans serif;
-      font-size      : 20px;
-      letter-spacing : 1px;
-      text-align     : center;
-      line-height    : 56px;
-      color          : #000000;
-
-      cursor         : pointer;
-
-      &:last-child {
-        margin-right : 0;
-      }
-    }
   }
 }
 
 #page1 {
-  >.group {
-    top: 300px;
-  }
 
   .text {
+    cursor : default;
+
     .title {
       display     : inline-block;
       line-height : 100px;
@@ -244,5 +276,97 @@ html, body {
   }
   .options {
     margin-top : 280px;
+
+    li {
+      margin-right : 78px;
+    }
+  }
+}
+
+#page2 {
+
+  .stumps {
+    opacity : 0;
+    top     : 600px;
+
+    .stump {
+      display         : inline-block;
+      width           : 112px;
+      height          : 500px;
+      margin-right    : 248px;
+
+      background      : url(../img/the_stump.svg) no-repeat;
+      background-size : 112px 1020px;
+
+      &:last-child {
+        margin-right : 0;
+      }
+    }
+  }
+
+  .bails {
+    top : -175px;
+
+    .bail {
+      position        : relative;
+      display         : inline-block;
+      width           : 370px;
+      height          : 170px;
+
+      background      : url(../img/the_wicket.svg) no-repeat;
+      background-size : 370px 170px;
+
+      opacity         : 0;
+      //margin-right    : 18px;
+
+      &:last-child {
+        //margin-right : 0;
+      }
+    }
+  }
+
+  .text {
+    opacity : 0;
+    .scale(.8);
+
+    .subtitle {
+    }
+    .title {
+      line-height : 95px;
+      font-size   : 130px;
+      font-size   : 13rem;
+    }
+  }
+
+  .options {
+    top : 190px;
+
+    li {
+      position : relative;
+      margin-right : 78px;
+      opacity  : 0;
+
+      &:first-child {
+        right : 300px;
+      }
+      &:last-child {
+        left : 300px;
+      }
+    }
+  }
+
+}
+
+#debug {
+  position : fixed;
+  width    : 100%;
+  top      : 78px;
+  left     : 0;
+  height   : 550px;
+  width    : 100px;
+
+  textarea {
+    width  : 100%;
+    height : 100%;
   }
 }
