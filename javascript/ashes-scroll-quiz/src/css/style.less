@@ -55,6 +55,14 @@ html, body {
   color : #FAD701;
 }
 
+.darkblue {
+  color : #142841;
+}
+
+.roboto {
+  font-family : 'Roboto Condensed', sans-serif;
+}
+
 .btn {
   width          : 185px;
   height         : 56px;
@@ -71,6 +79,10 @@ html, body {
   color          : #000000;
 
   cursor         : pointer;
+
+  &.active {
+    background : rgba(255,0,0,.6);
+  }
 }
 
 ul {
@@ -78,11 +90,12 @@ ul {
   padding : 0;
 
   li {
-    display      : inline-block;
-    list-style   : none;
+    display    : inline-block;
+    position   : relative;
+    list-style : none;
 
     &:last-child {
-      margin  : 0 !important;
+      margin : 0 !important;
     }
   }
 }
@@ -114,16 +127,27 @@ nav {
   right    : 17px;
   top      : 80px;
 
-  z-index: 999;
+  z-index  : 999;
 
   li {
-    display: block;
-    margin-bottom: 2px;
+    display       : block;
+    margin-bottom : 2px;
   }
 
   .btn {
-    width: 90px;
+    width : 90px;
   }
+}
+
+#loader {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+
+  left: 50%;
+  top: 50%;
+
+  background: #1b516d url(../img/loader.gif) no-repeat;
 }
 
 // --------------------------------- HEADER --------------------------------- //
@@ -241,6 +265,10 @@ nav {
   > .group {
     top : 200px;
   }
+
+  div {
+    .transform(translate3d(0%, 0, 0) scale3d(1, 1, 1));
+  }
 }
 
 .group {
@@ -317,12 +345,18 @@ nav {
       background-size : 370px 170px;
 
       opacity         : 0;
-      //margin-right    : 18px;
-
-      &:last-child {
-        //margin-right : 0;
-      }
     }
+  }
+
+  .cricket-ball {
+    position        : absolute;
+    width           : 200px;
+    height          : 200px;
+
+    background      : url(../img/the_ball.svg);
+    background-size : 200px 200px;
+
+    .scale(.5);
   }
 
   .text {
@@ -342,9 +376,8 @@ nav {
     top : 190px;
 
     li {
-      position : relative;
       margin-right : 78px;
-      opacity  : 0;
+      opacity      : 0;
 
       &:first-child {
         right : 300px;
@@ -354,7 +387,102 @@ nav {
       }
     }
   }
+}
 
+#page3 {
+
+  > .group {
+    top : 150px;
+  }
+
+  .text {
+    .subtitle {
+      font-size : 39px;
+      font-size : 3.9rem;
+    }
+    .title {
+      font-size   : 76px;
+      font-size   : 7.6rem;
+      line-height : 60px;
+    }
+  }
+  .options {
+    top : 190px;
+
+    .question {
+      -webkit-transform-style     : preserve-3d;
+      backface-visibility         : hidden;
+      -webkit-backface-visibility : hidden; /* Chrome and Safari */
+      -moz-backface-visibility    : hidden; /* Firefox */
+      -ms-backface-visibility     : hidden; /* Internet Explorer */
+
+      .dudes {
+        top        : -32px;
+        left       : 200px;
+        height     : 88px;
+        background : url(../img/the_dude_small.svg) repeat-x;
+      }
+      > div {
+        position : absolute;
+      }
+      &.q1 {
+        .dudes {
+          width : 606px;
+        }
+      }
+      &.q2 {
+        top : 104px;
+        .dudes {
+          width : 708px;
+        }
+      }
+      &.q3 {
+        top : 208px;
+        .dudes {
+          width : 808px;
+        }
+      }
+    }
+  }
+}
+
+#page4 {
+
+  > .group {
+    top : 100px;
+  }
+
+  .results {
+    line-height : 130px;
+
+    .subtitle {
+      font-size : 75px;
+      font-size : 7.5rem;
+    }
+    .time {
+      font-size : 72px;
+      font-size : 7.2rem;
+
+      sub {
+        position  : relative;
+        bottom    : 16px;
+        left      : 4px;
+
+        font-size : 22px;
+        font-size : 2.2rem;
+      }
+    }
+  }
+
+  .cta {
+    position : relative;
+    bottom   : 40px;
+
+    .btn {
+      margin-top : 10px;
+      display    : inline-block;
+    }
+  }
 }
 
 #debug {

@@ -111,6 +111,12 @@ body {
 .yellow {
   color: #FAD701;
 }
+.darkblue {
+  color: #142841;
+}
+.roboto {
+  font-family: 'Roboto Condensed', sans-serif;
+}
 .btn {
   width: 185px;
   height: 56px;
@@ -125,12 +131,16 @@ body {
   color: #000000;
   cursor: pointer;
 }
+.btn.active {
+  background: rgba(255, 0, 0, 0.6);
+}
 ul {
   margin: 0;
   padding: 0;
 }
 ul li {
   display: inline-block;
+  position: relative;
   list-style: none;
 }
 ul li:last-child {
@@ -163,6 +173,14 @@ nav li {
 }
 nav .btn {
   width: 90px;
+}
+#loader {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  background: #1b516d url(../img/loader.gif) no-repeat;
 }
 #header {
   position: relative;
@@ -270,6 +288,13 @@ nav .btn {
 .page > .group {
   top: 200px;
 }
+.page div {
+  -webkit-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
+  -moz-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
+  -o-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
+  -ms-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
+  transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
+}
 .group {
   display: block;
   position: absolute;
@@ -331,6 +356,18 @@ nav .btn {
   background-size: 370px 170px;
   opacity: 0;
 }
+#page2 .cricket-ball {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: url(../img/the_ball.svg);
+  background-size: 200px 200px;
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  transform: scale(0.5);
+}
 #page2 .text {
   opacity: 0;
   -webkit-transform: scale(0.8);
@@ -348,7 +385,6 @@ nav .btn {
   top: 190px;
 }
 #page2 .options li {
-  position: relative;
   margin-right: 78px;
   opacity: 0;
 }
@@ -357,6 +393,84 @@ nav .btn {
 }
 #page2 .options li:last-child {
   left: 300px;
+}
+#page3 > .group {
+  top: 150px;
+}
+#page3 .text .subtitle {
+  font-size: 39px;
+  font-size: 3.9rem;
+}
+#page3 .text .title {
+  font-size: 76px;
+  font-size: 7.6rem;
+  line-height: 60px;
+}
+#page3 .options {
+  top: 190px;
+}
+#page3 .options .question {
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Chrome and Safari */
+  -moz-backface-visibility: hidden;
+  /* Firefox */
+  -ms-backface-visibility: hidden;
+  /* Internet Explorer */
+}
+#page3 .options .question .dudes {
+  top: -32px;
+  left: 200px;
+  height: 88px;
+  background: url(../img/the_dude_small.svg) repeat-x;
+}
+#page3 .options .question > div {
+  position: absolute;
+}
+#page3 .options .question.q1 .dudes {
+  width: 606px;
+}
+#page3 .options .question.q2 {
+  top: 104px;
+}
+#page3 .options .question.q2 .dudes {
+  width: 708px;
+}
+#page3 .options .question.q3 {
+  top: 208px;
+}
+#page3 .options .question.q3 .dudes {
+  width: 808px;
+}
+#page4 > .group {
+  top: 100px;
+}
+#page4 .results {
+  line-height: 130px;
+}
+#page4 .results .subtitle {
+  font-size: 75px;
+  font-size: 7.5rem;
+}
+#page4 .results .time {
+  font-size: 72px;
+  font-size: 7.2rem;
+}
+#page4 .results .time sub {
+  position: relative;
+  bottom: 16px;
+  left: 4px;
+  font-size: 22px;
+  font-size: 2.2rem;
+}
+#page4 .cta {
+  position: relative;
+  bottom: 40px;
+}
+#page4 .cta .btn {
+  margin-top: 10px;
+  display: inline-block;
 }
 #debug {
   position: fixed;

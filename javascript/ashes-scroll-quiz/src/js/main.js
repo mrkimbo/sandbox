@@ -9,16 +9,18 @@
 // --------------------------- INITIALISATION ------------------------------- //
 var elements = {
   root: document.find('#main-container'),
+  loader: document.find('#loader'),
   header: document.find('#header'),
   scrollBox: document.find('#scroll-box'),
   scroll: document.find('#scroll'),
   container: document.find('#page-container'),
+  nav: document.find('nav'),
   pages: document.findAll('.page'),
   btns: document.findAll('.options .btn')
 }
 var answers = [0,0,0];
 var dirty = false, pos;
-var maxScroll;
+var maxScroll, timeScale = 1;
 var screenSize = new Rect();
 
 init();
@@ -36,7 +38,6 @@ function init()
   elements.scrollBox.addEventListener('scroll',redraw,false);
 
   elements.scrollBox.addEventListener('click',function(evt){
-    //log(evt);
     var style;
     elements.btns.forEach(function(item){
       style = getComputedStyle(item);
@@ -46,15 +47,23 @@ function init()
 
   document.findAll('nav .btn').forEach(function(item){
     item.addEventListener('click', function(evt){
-      log('click');
-      var t = MainTimeline.getLabelTime('Page' + evt.target.id.match(/[0-9]/)[0]);
-      scrollTo(maxScroll*(t/MainTimeline.totalTime()));
+      var t = MainTimeline.getLabelTime('Question' + evt.target.id.match(/[0-9]/)[0]);
+      //elements.scrollBox.scrollTop = maxScroll*(t/MainTimeline.totalDuration());
+      scrollTo(maxScroll*(t/MainTimeline.totalDuration()));
     })
   });
 
+  if(isTouchEnabled()){
+    elements.container.style.left = 0;
+    elements.nav.style.right = 0;
+  }
 
   window.addEventListener('resize',onResize,false);
   onResize(null);
+
+  elements.loader.classList.add('hidden');
+  elements.container.classList.remove('hidden');
+  log('Ready..');
 }
 
 function onResize(evt)
@@ -65,11 +74,23 @@ function onResize(evt)
 
 function redrawPages()
 {
+  var el;
   elements.scrollBox.style.height = elements.root.clientHeight-78 + 'px';
   maxScroll = elements.scrollBox.scrollHeight - elements.scrollBox.clientHeight;
 
   screenSize.width = elements.scrollBox.clientWidth;
   screenSize.height = elements.scrollBox.clientHeight;
+
+  // align dude options //
+  el = elements.pages[2].find('.options');
+  TweenLite.set(el,{x:(screenSize.width-1008)*.5});
+
+  // align ball //
+  el = elements.pages[1].find('.cricket-ball');
+  TweenLite.set(el,{
+    x:(screenSize.width *.5)-100,
+    y:screenSize.height + 100}
+  );
 }
 
 // -------------------------- MAIN UPDATE LOOP ------------------------------ //
@@ -87,9 +108,12 @@ loop();
 
 function redraw(evt)
 {
+  onTimelineUpdate();
+
   // layout / update stuff here.. //
   pos = getScrollTime();
-  MainTimeline.tweenTo(pos,{timeScale:1});
+  //MainTimeline.tweenTo(pos,{timeScale:2});
+  MainTimeline.seek(pos);
 }
 
 var lastScrollPos;

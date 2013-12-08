@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
   <title>Ashes Scroll Quiz</title>
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -28,8 +28,9 @@
     </div>
   </div>
 
-  <div id="page-container">
+  <div id="page-container" class="hidden">
 
+    <!-- PAGE 1 -->
     <div id="page1" class="page">
       <div class="group">
         <div class="group text">
@@ -47,6 +48,8 @@
         </div>
       </div>
     </div>
+
+    <!-- PAGE 2 -->
     <div id="page2" class="page">
       <div class="group">
         <div class="group text">
@@ -68,14 +71,48 @@
           <div class="stump"></div>
           <div class="stump"></div>
         </div>
+        <div class="cricket-ball"></div>
       </div>
     </div>
-    <!--<div id="page3" class="page hidden">
-      Page3
-    </div>-->
-    <!--<div id="page4" class="page hidden">
-      Page4
-    </div>-->
+
+    <!-- PAGE 3 -->
+    <div id="page3" class="page">
+      <div class="group">
+        <div class="group text">
+          <div class="subtitle">HOW MANY PLAYERS</div>
+          <div class="title darkblue">PER TEAM?</div>
+        </div>
+        <div class="group options">
+          <div class="group question q1">
+            <div class="btn">12</div>
+            <div class="dudes"></div>
+          </div>
+          <div class="group question q2">
+            <div class="btn">14</div>
+            <div class="dudes"></div>
+          </div>
+          <div class="group question q3">
+            <div class="btn">16</div>
+            <div class="dudes"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4 -->
+    <div id="page4" class="page">
+      <div class="group">
+        <div class="text results">
+          <div class="subtitle roboto">YOUR SCORE</div>
+          <div class="title roboto white">3/3</div>
+          <div class="time roboto">00:22:46<sub>SEC</sub></div>
+        </div>
+        <div class="text cta">
+          <div class="subtitle yellow">YOU HAVE WON A <span class="value">$10</span> BET</div>
+          <div class="btn">BET NOW</div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -83,13 +120,16 @@
     <div id="scroll"></div>
   </div>
 
-
   <nav>
     <ul>
       <li><button id="question1-btn" class="btn">Q1</button></li>
       <li><button id="question2-btn" class="btn">Q2</button></li>
+      <li><button id="question3-btn" class="btn">Q3</button></li>
+      <li><button id="question4-btn" class="btn">End</button></li>
     </ul>
   </nav>
+
+  <div id="loader"></div>
 
   <div id="debug" class="hidden">
     <textarea id="debug-text"></textarea>
@@ -98,13 +138,13 @@
 </div>
 
 <!-- CDN Scripts -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.2/TweenMax.min.js"></script>
 <script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
 <!-- build:js main.min.js -->
 <script src="js/hammer.js" data-description="Touch Interaction Framework"></script>
 <script src="js/classListPolyFill.js" data-description="ClassList PolyFill"></script>
-<script src="js/classes.js" data-description="Supporting classes"></script>
 <script src="js/utils.js" data-description="General Utils"></script>
+<script src="js/classes.js" data-description="Supporting classes"></script>
 <script src="js/anim.js" data-description="Animations"></script>
 <script src="js/main.js" data-description="Main Entry Point"></script>
 <!-- endbuild -->
