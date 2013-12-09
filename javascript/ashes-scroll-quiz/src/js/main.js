@@ -15,18 +15,30 @@ var elements = {
   scroll: document.find('#scroll'),
   container: document.find('#page-container'),
   nav: document.find('nav'),
+  score: document.find('#score'),
+  timer: document.find('#timer'),
+  results: {
+    score: document.find('#page4 .results .title'),
+    timer: document.find('#page4 .results .time'),
+    prize: document.find('#page4 .value')
+  },
   pages: document.findAll('.page'),
-  btns: document.findAll('.options .btn')
+  btns: document.findAll('.options .btn'),
+  ctaBtn: document.find('.cta .btn')
 }
 var answers = [0,0,0];
+var prizes = ['$10','$10','$100','$500'];
 var dirty = false, pos;
 var maxScroll, timeScale = 1;
 var screenSize = new Rect();
+var timerRunning = false;
 
 init();
 
 function init()
 {
+  window.scrollEnabled = true;
+
   Hammer(
     elements.root,{
       drag_max_touches: 1,
@@ -37,21 +49,21 @@ function init()
 
   elements.scrollBox.addEventListener('scroll',redraw,false);
 
-  elements.scrollBox.addEventListener('click',function(evt){
-    var style;
-    elements.btns.forEach(function(item){
-      style = getComputedStyle(item);
-      //log('btn: ' + style.left + ',' + style.top + ', click: ' + evt.pageX + ',' + evt.pageY);
-    });
+  // Wire up side-nav buttons //
+  /*document.findAll('nav .btn').forEach(function(item){
+    item.addEventListener('click', function(evt){
+      if(!scrollEnabled) return;
+      scrollToQuestion(evt.target.id.match(/[0-9]/)[0]);
+    })
+  });*/
+
+  // Wire up question buttons //
+  elements.btns.forEach(function(item){
+    item.addEventListener('click',optionClickHandler,false);
   });
 
-  document.findAll('nav .btn').forEach(function(item){
-    item.addEventListener('click', function(evt){
-      var t = MainTimeline.getLabelTime('Question' + evt.target.id.match(/[0-9]/)[0]);
-      //elements.scrollBox.scrollTop = maxScroll*(t/MainTimeline.totalDuration());
-      scrollTo(maxScroll*(t/MainTimeline.totalDuration()));
-    })
-  });
+  // Wire up CTA btn //
+  elements.ctaBtn.addEventListener('click', ctaClickHandler, false);
 
   if(isTouchEnabled()){
     elements.container.style.left = 0;
@@ -61,8 +73,18 @@ function init()
   window.addEventListener('resize',onResize,false);
   onResize(null);
 
+  // hide loader and show page container //
   elements.loader.classList.add('hidden');
   elements.container.classList.remove('hidden');
+
+  // remove loading state //
+  elements.root.classList.remove('loading');
+
+  resetTimer();
+  snapToQuestion();
+  redrawScores();
+  redrawTimer();
+
   log('Ready..');
 }
 
@@ -70,6 +92,7 @@ function onResize(evt)
 {
   redrawPages();
   redrawTweens();
+  onTimelineUpdate();
 }
 
 function redrawPages()
@@ -98,7 +121,7 @@ function loop()
 {
   if(dirty)
   {
-    redraw();
+    tick();
     checkDirty();
   }
 
@@ -108,17 +131,31 @@ loop();
 
 function redraw(evt)
 {
-  onTimelineUpdate();
-
   // layout / update stuff here.. //
   pos = getScrollTime();
-  //MainTimeline.tweenTo(pos,{timeScale:2});
   MainTimeline.seek(pos);
+  onTimelineUpdate();
+}
+function redrawScores()
+{
+  // update html to reflect score //
+  elements.score.textContent = elements.results.score.textContent =
+    getScore().toString() + '/' + (elements.pages.length-1).toString();
+
+  elements.results.prize.textContent = prizes[getScore()];
+}
+
+function redrawTimer()
+{
+  elements.timer.textContent =
+    elements.results.timer.textContent = getTimeString();
 }
 
 var lastScrollPos;
 function handleTouchEvent(evt)
 {
+  if(!scrollEnabled) return;
+
   //log(evt.type);
   switch(evt.type)
   {
@@ -132,20 +169,25 @@ function handleTouchEvent(evt)
 
     case 'dragup':
     case 'dragdown':
-      scrollTo(lastScrollPos - evt.gesture.deltaY);
+      if(scrollTween) scrollTween.kill();
+      elements.scrollBox.scrollTop = (lastScrollPos - evt.gesture.deltaY);
       break;
 
     case 'swipeup':
-      scrollTo(lastScrollPos + 1000);
+      var q = Math.min(elements.pages.length,getCurrentPage()+1);
+      scrollToQuestion(q);
       evt.gesture.stopDetect();
       break;
 
     case 'swipedown':
-      scrollTo(lastScrollPos - 1000);
+      var q = Math.max(1,getCurrentPage()-1);
+      scrollToQuestion(q);
       evt.gesture.stopDetect();
       break;
 
     case 'release':
+      // snap to question points /
+      snapToQuestion();
       break;
   }
 
@@ -155,5 +197,26 @@ function handleTouchEvent(evt)
 
 function checkDirty()
 {
-  dirty = false;
+  dirty = timerRunning;
 }
+
+function ctaClickHandler()
+{
+  alert('CTA Button clicked');
+}
+
+// ScrollEnabled property to enable/disable scroll interaction //
+var _scrollEnabled = true;
+Object.defineProperty(window,'scrollEnabled',{
+  set: function(b){
+    _scrollEnabled = b;
+    if(b){
+      elements.scrollBox.classList.remove('disabled');
+    } else {
+      elements.scrollBox.classList.add('disabled');
+    }
+  },
+  get: function(){
+    return _scrollEnabled;
+  }
+});

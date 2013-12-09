@@ -75,7 +75,6 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: #1b516d;
   font-family: 'Open Sans', Helvetia, sans-serif;
   font-weight: 300;
   color: #FFFFFF;
@@ -130,9 +129,16 @@ body {
   line-height: 52px;
   color: #000000;
   cursor: pointer;
+  -webkit-transition: background 0.5s ease-out;
+  -moz-transition: background 0.5s ease-out;
+  -o-transition: background 0.5s ease-out;
+  transition: background 0.5s ease-out;
 }
 .btn.active {
   background: rgba(255, 0, 0, 0.6);
+}
+.btn.disabled {
+  background: #DDDDDD;
 }
 ul {
   margin: 0;
@@ -159,6 +165,8 @@ ul li:last-child {
   height: 100%;
   overflow: hidden;
   min-width: 1024px;
+}
+#main-container.loading {
   background: #1b516d;
 }
 nav {
@@ -242,6 +250,9 @@ nav .btn {
   font-size: 2.5rem;
   cursor: default;
 }
+#timer.active {
+  color: #FF0000;
+}
 #scroll-box {
   position: absolute;
   width: 100%;
@@ -256,6 +267,9 @@ nav .btn {
   -ms-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
 }
+#scroll-box.disabled {
+  z-index: -1;
+}
 #scroll {
   position: relative;
   height: 4000px;
@@ -266,6 +280,7 @@ nav .btn {
   height: 100%;
   left: -15px;
   top: 0;
+  background: #1b516d;
   -webkit-transform-style: preserve-3d;
   -webkit-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   -moz-transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
@@ -449,6 +464,9 @@ nav .btn {
 #page4 .results {
   line-height: 130px;
 }
+#page4 .results > div {
+  cursor: default;
+}
 #page4 .results .subtitle {
   font-size: 75px;
   font-size: 7.5rem;
@@ -467,6 +485,9 @@ nav .btn {
 #page4 .cta {
   position: relative;
   bottom: 40px;
+}
+#page4 .cta .subtitle {
+  cursor: default;
 }
 #page4 .cta .btn {
   margin-top: 10px;

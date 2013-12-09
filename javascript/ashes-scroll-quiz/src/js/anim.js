@@ -22,7 +22,6 @@ function redrawTweens()
   page = elements.pages[0];
   elems= page.findAll('.options li');
 
-  MainTimeline.addLabel('Start');
   MainTimeline.addLabel('Page1');
   MainTimeline.addLabel('Question1');
 
@@ -259,7 +258,6 @@ function redrawTweens()
   )
 
   MainTimeline.addLabel('Question4');
-  MainTimeline.addLabel('End');
 }
 
 
@@ -267,14 +265,16 @@ function onTimelineUpdate()
 {
   if(getCurrentPage()!=currentPage)
   {
-   sortVisibility();
+    sortVisibility();
   }
 }
 
 function sortVisibility()
 {
   currentPage = getCurrentPage();
-  log('currentPage: ' + currentPage)
+  //log('currentPage: ' + currentPage);
+
+  // classList.toggle seems to be buggy on iOS //
 
   elements.nav.findAll('.btn').forEach(function(el){
     if(el.id.match(/[0-9]/)[0] == currentPage){
@@ -284,15 +284,22 @@ function sortVisibility()
     }
   });
 
-  /*elements.pages.forEach(function(item){
-    log(item.id.substr(-1) + ' > ' + currentPage);
-    item.classList.toggle('hidden',item.id.substr(-1) == currentPage);
-  });*/
+  elements.pages.forEach(function(el){
+    if(el.id.match(/[0-9]/)[0] == currentPage){
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
 }
 
 function getScrollTime()
 {
   return MainTimeline.totalDuration()*getScrollPercent();
+}
+function getScrollPosition()
+{
+  return elements.scrollBox.scrollTop;
 }
 function getScrollPercent()
 {
@@ -300,17 +307,38 @@ function getScrollPercent()
 }
 function getCurrentPage()
 {
-  return MainTimeline.currentLabel().substr(-1);
+  return parseInt(MainTimeline.currentLabel().substr(-1))
+}
+function getPageScrollPosition(idx){
+  var t = MainTimeline.getLabelTime('Question' + idx.toString());
+  return maxScroll*(t/MainTimeline.totalDuration());
 }
 
-function scrollTo(v)
-{
-  if(scrollTween && !scrollTween.paused())
-  {
-    scrollTween.kill();
+function snapToQuestion(){
+  var p,i = elements.pages.length;
+  while(i){
+    p = getPageScrollPosition(i--);
+    //log('diff to page'+(i+1)+': ' +Math.abs(p-getScrollPosition()));
+    if(Math.abs(p-getScrollPosition())<200){
+      scrollTo(p,.5);
+      return;
+    }
   }
-  scrollTween = new TweenLite(elements.scrollBox,2,{
+}
+
+function scrollTo(v,opt_spd)
+{
+  if(scrollTween) scrollTween.kill();
+  scrollTween = new TweenLite(elements.scrollBox,opt_spd||5,{
     scrollTop:Math.min(v,maxScroll),
+    onComplete: enterQuestion,
     ease: Power1.easeOut
   });
 }
+
+function scrollToQuestion(qNum)
+{
+  exitQuestion();
+  scrollTo(getPageScrollPosition(qNum));
+}
+
