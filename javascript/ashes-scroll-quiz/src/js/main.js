@@ -33,6 +33,10 @@ var maxScroll, timeScale = 1;
 var screenSize = new Rect();
 var timerRunning = false;
 
+var prop, style = document.documentElement.style;
+var _raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
 init();
 
 function init()
@@ -70,7 +74,7 @@ function init()
     elements.nav.style.right = 0;
   }
 
-  window.addEventListener('resize',onResize,false);
+  //window.addEventListener('resize',onResize,false);
   onResize(null);
 
   // hide loader and show page container //

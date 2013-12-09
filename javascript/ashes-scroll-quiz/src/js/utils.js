@@ -4,11 +4,6 @@
  * Time: 12:47 PM
  */
 
-var prop, style = document.documentElement.style;
-var _raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-
 function getSupportedProp(props)
 {
   while(props.length)

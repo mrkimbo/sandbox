@@ -28,7 +28,7 @@ module.exports = function(grunt) {
             cwd: 'src/',
             dest: 'deploy/',
             src: [
-              'img/*.{jpg,jpeg,png,gif}', // images
+              'img/*.{jpg,jpeg,png,gif,svg}', // images
               '*.html' // html pages
             ]
           }
