@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>FootyMan</title>
+  <script src="js/phaser.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+  function init()
+  {
+    var game = new Phaser.Game(800, 256, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var backdrop, ball, hero, bounce, kickAnim;
+
+    function preload()
+    {
+      game.load.atlas('hero', 'img/soccerman.png', 'img/soccerman.array.json');
+      game.load.image('backdrop', 'img/backdrop.png');
+      game.load.image('ball', 'img/ball.png');
+    }
+
+    function create()
+    {
+      var w = 0, s, p = 0;
+      //var bw = game.cache.getImage('backdrop').width;
+      backdrop = game.add.group();
+      while (w < game.width + 320)
+      {
+        s = backdrop.create(320 * (p++), 0, 'backdrop');
+        w += s.width;
+      }
+
+      hero = game.add.sprite(150, game.world.height, 'hero');
+      hero.anchor.setTo(.5, 1);
+
+      hero.animations.add('kick', ['kick'], 0, false, false);
+      hero.animations.add('idle', ['idle'], 0, false, false);
+      hero.animations.add(
+        'walk', ['run1', 'run2', 'run3', 'run4', 'run5'], 24, true, false
+      );
+
+      ball = game.add.sprite(hero.x + 45, game.world.height - 36, 'ball');
+      ball.anchor.setTo(.5, .5);
+
+      bounce = game.add.tween(ball);
+      bounce
+        .to({ y: game.world.height - 60 }, 250, Phaser.Easing.Quadratic.Out)
+        .to({ y: game.world.height - 36 }, 250, Phaser.Easing.Quadratic.In)
+        .loop();
+      bounce.start();
+
+      game.input.onDown.add(kickBall, this);
+
+      // start off in idle mode //
+      hero.animations.play('idle');
+    }
+
+    var diffX;
+
+    function follow()
+    {
+      diffX = ball.x - hero.x;
+      if (diffX > 45)
+      {
+        if (hero.animations.currentAnim.name != 'walk')
+        {
+          hero.animations.play('walk');
+        }
+        ball.x -= 6;
+      } else {
+        hero.animations.play('idle');
+        ball.x = hero.x + 45;
+      }
+    }
+
+    function kickBall(evt)
+    {
+      if(hero.animations.currentAnim.name == 'walk') return;
+
+      hero.animations.play('kick');
+      kickAnim = game.add.tween(ball).to(
+        {x: game.world.width * 1.1, angle: 1000},
+        500, Phaser.Easing.Quadratic.Out
+      );
+      //kickAnim.onComplete.add(kickComplete,this);
+      kickAnim.start();
+    }
+
+    function kickComplete()
+    {
+      bounce.pause();
+      ball.y = game.world.height - 36;
+    }
+
+    function update()
+    {
+      follow();
+
+      //log('update')
+      if (hero.animations.currentAnim.name == 'walk')
+      {
+        //ball.angle+=6;
+        backdrop.x -= 6;
+        if (backdrop.x < -320) backdrop.x = 0;
+      }
+    }
+  }
+
+  window.onload = init;
+
+</script>
+
+</body>
+</html>
