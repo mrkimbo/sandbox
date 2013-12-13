@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="js/phaser.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+  var game;
+
+  function init()
+  {
+    game = new Phaser.Game(800, 256, Phaser.AUTO, '', {
+      preload: preload, // initial preload
+      loadUpdate: onLoadProgress, // load progress updates
+      create: create, // initial render
+      update: update, // pre-redraw
+      render: null // post-redraw
+    });
+    var scroll_spd = 5, walking = false;
+    var backdrop, ball, hero, bounce, kickAnim;
+    var input;
+
+    function preload()
+    {
+      log('preload()');
+      game.load.atlas('hero', 'img/soccerman.png', 'img/soccerman.array.json');
+      game.load.image('backdrop', 'img/backdrop.png');
+      game.load.image('ball', 'img/ball.png');
+    }
+
+    function onLoadProgress()
+    {
+      log('loadProgress: ' + game.load.progress);
+    }
+
+    function create()
+    {
+      log('create()');
+
+      initWorld();
+      renderGameElements();
+      startGame();
+    }
+
+    function initWorld()
+    {
+      game.world.setBounds(0,0,1250,256);
+
+      input = {
+        left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+        right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+        space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+      };
+
+      game.camera.x = (game.world.width-game.width)*.5;
+    }
+
+    function renderGameElements()
+    {
+      var w = 0, s, p = 0;
+      backdrop = game.add.group();
+      while (w < game.world.width)
+      {
+        s = backdrop.create(320 * (p++), 0, 'backdrop');
+        w += s.width;
+      }
+
+      hero = game.add.sprite(0, game.world.height, 'hero');
+      hero.anchor.setTo(.5, 1);
+
+      hero.animations.add('kick', ['kick'], 0, false, false);
+      hero.animations.add('idle', ['idle'], 0, false, false);
+      hero.animations.add(
+        'walk', ['run1', 'run2', 'run3', 'run4', 'run5'], 24, true, false
+      );
+
+      ball = game.add.sprite(0, game.world.height - 36, 'ball');
+      ball.anchor.setTo(.5, .5);
+
+      bounce = game.add.tween(ball);
+      bounce
+        .to({ y: game.world.height - 60 }, 250, Phaser.Easing.Quadratic.Out)
+        .to({ y: game.world.height - 36 }, 250, Phaser.Easing.Quadratic.In)
+        .loop();
+    }
+
+    function startGame()
+    {
+      // initial positions //
+      hero.x = game.camera.x + (game.width *.5) - 20;
+      ball.x = game.camera.x + (game.width *.75);
+
+      //hero.fixedToCamera = true;
+
+      //bounce.start();
+
+      //game.input.onDown.add(kickBall, this);
+
+      // start off in idle mode //
+      hero.animations.play('idle');
+    }
+
+    var diffX;
+    function follow()
+    {
+      diffX = ball.x - hero.x;
+      if (diffX > 45)
+      {
+        if (hero.animations.currentAnim.name != 'walk')
+        {
+          hero.animations.play('walk');
+        }
+        ball.x -= 6;
+      } else {
+        hero.animations.play('idle');
+        ball.x = hero.x + 45;
+      }
+    }
+
+    function kickBall(evt)
+    {
+      if(hero.animations.currentAnim.name == 'walk') return;
+
+      hero.animations.play('kick');
+      kickAnim = game.add.tween(ball).to(
+        {x: game.world.width * 1.1, angle: 1000},
+        500, Phaser.Easing.Quadratic.Outgi
+      );
+      //kickAnim.onComplete.add(kickComplete,this);
+      kickAnim.start();
+    }
+
+    function kickComplete()
+    {
+      bounce.pause();
+      ball.y = game.world.height - 36;
+    }
+
+    function handleInput()
+    {
+      if(input.left.isDown){
+        game.camera.x -= scroll_spd;
+        hero.x -= scroll_spd;
+        hero.scale.x = -1;
+
+        if(hero.x < 15) hero.x = 15;
+      }
+      if(input.right.isDown){
+        game.camera.x += scroll_spd;
+        hero.x += scroll_spd;
+        hero.scale.x = 1;
+
+        if(hero.x > game.world.width-15) hero.x = game.world.width-15;
+      }
+
+      walking = input.left.isDown || input.right.isDown;
+
+      //log(game.camera.x);
+    }
+
+    function setHeroState()
+    {
+      if(walking)
+      {
+        if(hero.animations.currentAnim.name != 'walk')
+        {
+          hero.animations.play('walk');
+        }
+      }
+      else {
+        hero.animations.play('idle');
+      }
+    }
+
+    function update()
+    {
+      //follow();
+      handleInput();
+      setHeroState();
+    }
+  }
+
+  window.onload = init;
+
+</script>
+</body>
+</html>

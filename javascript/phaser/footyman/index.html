@@ -11,18 +11,32 @@
 
   function init()
   {
-    var game = new Phaser.Game(800, 256, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(800, 256, Phaser.AUTO, '', {
+      preload: preload, // initial preload
+      loadUpdate: onLoadProgress, // load progress updates
+      create: create, // initial render
+      update: update, // pre-redraw
+      render: null // post-redraw
+    });
     var backdrop, ball, hero, bounce, kickAnim;
 
     function preload()
     {
+      log('preload()');
       game.load.atlas('hero', 'img/soccerman.png', 'img/soccerman.array.json');
       game.load.image('backdrop', 'img/backdrop.png');
       game.load.image('ball', 'img/ball.png');
     }
 
+    function onLoadProgress()
+    {
+      log('loadProgress: ' + game.load.progress);
+    }
+
     function create()
     {
+      log('create()');
+
       var w = 0, s, p = 0;
       //var bw = game.cache.getImage('backdrop').width;
       backdrop = game.add.group();
@@ -82,7 +96,7 @@
       hero.animations.play('kick');
       kickAnim = game.add.tween(ball).to(
         {x: game.world.width * 1.1, angle: 1000},
-        500, Phaser.Easing.Quadratic.Out
+        500, Phaser.Easing.Quadratic.Outgi
       );
       //kickAnim.onComplete.add(kickComplete,this);
       kickAnim.start();
