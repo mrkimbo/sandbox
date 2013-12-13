@@ -18,9 +18,13 @@
       update: update, // pre-redraw
       render: null // post-redraw
     });
-    var scroll_spd = 5, walking = false;
-    var backdrop, ball, hero, bounce, kickAnim;
+    var scroll_spd = 5, walking = false, THROW_SPD = 500;
+    var bounds, backdrop, ball, hero, bounce, kickAnim;
     var input;
+    var ballAnim = {
+      vx: 0,
+      vy: 0
+    }
 
     function preload()
     {
@@ -46,7 +50,7 @@
 
     function initWorld()
     {
-      game.world.setBounds(0,0,1250,256);
+      game.world.setBounds(0,0,1000,256);
 
       input = {
         left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
@@ -67,6 +71,10 @@
         w += s.width;
       }
 
+      bounds = game.add.group();
+
+
+
       hero = game.add.sprite(0, game.world.height, 'hero');
       hero.anchor.setTo(.5, 1);
 
@@ -78,6 +86,9 @@
 
       ball = game.add.sprite(0, game.world.height - 36, 'ball');
       ball.anchor.setTo(.5, .5);
+      ball.body.setSize(40,40);
+      //ball.physics.gravity.y = 15;
+
 
       bounce = game.add.tween(ball);
       bounce
@@ -102,13 +113,13 @@
       hero.animations.play('idle');
     }
 
-    var diffX;
+    /*var diffX;
     function follow()
     {
       diffX = ball.x - hero.x;
       if (diffX > 45)
       {
-        if (hero.animations.currentAnim.name != 'walk')
+        if (currentAnim() == 'idle')
         {
           hero.animations.play('walk');
         }
@@ -117,19 +128,39 @@
         hero.animations.play('idle');
         ball.x = hero.x + 45;
       }
-    }
+    }*/
 
-    function kickBall(evt)
+    function kickBall()
     {
-      if(hero.animations.currentAnim.name == 'walk') return;
+      walking = false;
 
       hero.animations.play('kick');
-      kickAnim = game.add.tween(ball).to(
-        {x: game.world.width * 1.1, angle: 1000},
-        500, Phaser.Easing.Quadratic.Outgi
-      );
-      //kickAnim.onComplete.add(kickComplete,this);
-      kickAnim.start();
+      setTimeout(function(){
+        hero.animations.play('idle');
+      },120);
+
+      // if ball is within range, kick it //
+      if(Math.abs(hero.x-ball.x) < 30)
+      {
+        // facing ball ? //
+        if((ball.x-hero.x > 0 && hero.scale.x > 0) ||
+          ((ball.x-hero.x < 0 && hero.scale.x < 0)))
+        {
+          log('kicked ball');
+
+          var dir = new Phaser.Point(
+            (Math.random()*game.width) - ball.center.x,
+            (Math.random()*game.height) - ball.center.y
+          );
+          dir = dir.normalize();
+
+          ball.body.velocity.x = THROW_SPD * dir.x;
+          ball.body.velocity.y = THROW_SPD * dir.y;
+
+          ball.body.allowGravity = true;
+
+        }
+      }
     }
 
     function kickComplete()
@@ -140,6 +171,11 @@
 
     function handleInput()
     {
+      if(currentAnim() != 'kick' && input.space.isDown)
+      {
+        kickBall();
+      }
+
       if(input.left.isDown){
         game.camera.x -= scroll_spd;
         hero.x -= scroll_spd;
@@ -162,9 +198,11 @@
 
     function setHeroState()
     {
+      if(currentAnim() == 'kick') return;
+
       if(walking)
       {
-        if(hero.animations.currentAnim.name != 'walk')
+        if(currentAnim() != 'walk')
         {
           hero.animations.play('walk');
         }
@@ -179,6 +217,11 @@
       //follow();
       handleInput();
       setHeroState();
+    }
+
+    function currentAnim()
+    {
+      return hero.animations.currentAnim.name;
     }
   }
 
