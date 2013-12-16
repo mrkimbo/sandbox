@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="js/phaser.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+  var game;
+
+  function init()
+  {
+    game = new Phaser.Game(800, 256, Phaser.AUTO, '', {
+      preload: preload, // initial preload
+      loadUpdate: onLoadProgress, // load progress updates
+      create: create, // initial render
+      update: update // pre-redraw
+      //,render: render // post-redraw
+    });
+    var LEFT = -1, RIGHT = 1
+    var config = {
+      scroll_spd: 5,
+      THROW_SPD: 800,
+      walking: false
+    }
+    var obj = {
+      fl4oor: null,
+      backdrop: null,
+      ball: null,
+      hero: null,
+      controls: null
+    }
+    var dir, p, diff, input;
+
+    function preload()
+    {
+      log('preload()');
+      game.load.atlas('hero', 'img/soccerman.png', 'img/soccerman.array.json');
+      game.load.image('backdrop', 'img/backdrop.png');
+      game.load.image('ball', 'img/ball.png');
+    }
+
+    function onLoadProgress()
+    {
+      log('loadProgress: ' + game.load.progress);
+    }
+
+    function create()
+    {
+      log('create()');
+
+      initWorld();
+      renderGameElements();
+      startGame();
+    }
+
+    function initWorld()
+    {
+      game.world.setBounds(0,0,1000,256);
+
+      input = {
+        left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+        right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+        space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+      };
+
+      game.camera.x = (game.world.width-game.width)*.5;
+    }
+
+    function renderGameElements()
+    {
+      // -- create tiled world background -- //
+      var w = 0, s, p = 0;
+      obj.backdrop = game.add.group();
+      while (w < game.world.width)
+      {
+        s = obj.backdrop.create(320 * (p++), 0, 'backdrop');
+        w += s.width;
+      }
+
+      // -- add floor object -- //
+      obj.floor = game.add.sprite(0,game.world.height-18);
+      obj.floor.body.setSize(game.world.width,18);
+      obj.floor.body.immovable = true;
+      obj.floor.body.customSeparateY = true;
+
+      // -- create our hero and add animations -- //
+      obj.hero = game.add.sprite(0, game.world.height, 'hero');
+      obj.hero.anchor.setTo(.5, 1);
+      obj.hero.body.setSize(38,35,-2,-115);
+      obj.hero.body.customSeparateX = obj.hero.body.customSeparateY = true;
+
+      obj.hero.animations.add('kick', ['kick'], 0, false, false);
+      obj.hero.animations.add('idle', ['idle'], 0, false, false);
+      obj.hero.animations.add(
+        'walk', ['run1', 'run2', 'run3', 'run4', 'run5'], 24, true, false
+      );
+
+      // -- create ball -- //
+      obj.ball = game.add.sprite(0,0, 'ball');
+      obj.ball.y = obj.floor.y - obj.ball.height;
+      obj.ball.body.collideWorldBounds = true;
+      obj.ball.body.setSize(40,40);
+      obj.ball.body.allowGravity = false;
+      obj.ball.body.allowRotation = true;
+      obj.ball.body.bounce.setTo(.9,.9);
+      obj.ball.body.gravity.y = 14;
+      obj.ball.body.drag.x = 50;
+      obj.ball.body.drag.y = 80;
+      obj.ball.body.customSeparateY = true;
+      obj.ball.anchor.setTo(.5,.5);
+
+      obj.controls = game.add.text(
+        0,15,'Arrow keys to move\nSpace-bar to kick',{
+          font: '14px Verdana',
+          fill: '#FFCC00',
+          align: 'center'
+        }
+      );
+    }
+
+    function startGame()
+    {
+      // initial positions //
+      obj.hero.x = game.camera.x + (game.width *.5) - 20;
+      obj.ball.x = game.camera.x + (game.width *.75);
+
+      obj.ball.body.velocity.x = obj.ball.body.velocity.y = 0;
+
+      // start off in idle mode //
+      obj.hero.animations.play('idle');
+    }
+
+    function kickBall()
+    {
+      walking = false;
+
+      obj.hero.animations.play('kick');
+      setTimeout(function(){
+        obj.hero.animations.play('idle');
+      },120);
+
+      // if ball is within range, kick it //
+      dir = obj.hero.scale.x;
+      diff = Math.abs(obj.hero.x-obj.ball.x) + (obj.floor.y - obj.ball.y);
+      if(diff <= 110)
+      {
+        // facing ball ? //
+        if((dir == LEFT && obj.hero.x>obj.ball.x) ||
+          ((dir == RIGHT&& obj.hero.x<obj.ball.x)))
+        {
+          p = new Phaser.Point(
+            .4 + (Math.random()*.6),
+            .2 + (Math.random() *.5)
+          ).normalize();
+
+          obj.ball.body.velocity.x = config.THROW_SPD * p.x * dir;
+          obj.ball.body.velocity.y = config.THROW_SPD * p.y;
+          obj.ball.body.allowGravity = true;
+
+          //log('kick: ' + (dir==LEFT?'LEFT':'RIGHT') + ',' + p);
+        }
+      }
+    }
+
+    function handleInput()
+    {
+      if(currentAnim() != 'kick' && input.space.isDown)
+      {
+        kickBall();
+      }
+
+      if(input.left.isDown){
+        game.camera.x -= config.scroll_spd;
+        obj.hero.x -= config.scroll_spd;
+        obj.hero.scale.x = -1;
+
+        if(obj.hero.x < 15) obj.hero.x = 15;
+      }
+      if(input.right.isDown){
+        game.camera.x += config.scroll_spd;
+        obj.hero.x += config.scroll_spd;
+        obj.hero.scale.x = 1;
+
+        if(obj.hero.x > game.world.width-15) obj.hero.x = game.world.width-15;
+      }
+
+      // update controls position so it appears to remain fixed //
+      obj.controls.x = game.camera.x + 20;
+
+      config.walking = input.left.isDown || input.right.isDown;
+    }
+
+    function setHeroState()
+    {
+      if(currentAnim() == 'kick') return;
+
+      if(config.walking)
+      {
+        if(currentAnim() != 'walk')
+        {
+          obj.hero.animations.play('walk');
+        }
+      }
+      else {
+        obj.hero.animations.play('idle');
+      }
+    }
+
+    function update()
+    {
+      handleInput();
+      setHeroState();
+
+      game.physics.collide(obj.ball,obj.floor,reflectBall,null,this);
+      game.physics.collide(obj.ball,obj.hero,headerBall,isMovingDownwards,this);
+      obj.ball.angle += obj.ball.body.velocity.x/30;
+
+      dampVelocity();
+    }
+
+    function reflectBall(obj1,obj2)
+    {
+      //log(obj.ball.body.velocity.y);
+      obj.ball.body.velocity.y *= -1;
+    }
+    function headerBall(obj1,obj2)
+    {
+      //log(obj.ball.body.velocity.y);
+      obj.ball.body.velocity.y = (obj.ball.body.velocity.y + .2)*-1;
+    }
+
+    function dampVelocity()
+    {
+      if(Math.abs(obj.ball.body.velocity.x) < 1) obj.ball.body.velocity.x = 0;
+      if(Math.abs(obj.ball.body.velocity.y) < 1) obj.ball.body.velocity.y = 0;
+
+      if(obj.ball.body.allowGravity &&
+        Math.abs(obj.ball.body.velocity.x) + Math.abs(obj.ball.body.velocity.y)+
+          Math.abs(obj.floor.y-obj.ball.y-(obj.ball.height *.5)) == 0)
+       {
+         log('bounce end');
+         obj.ball.body.allowGravity = false;
+       }
+    }
+
+    function isMovingDownwards()
+    {
+      return obj.ball.body.velocity.y > 0;
+    }
+
+    function currentAnim()
+    {
+      return obj.hero.animations.currentAnim.name;
+    }
+
+    function render()
+    {
+      game.debug.renderSpriteBody(obj.floor);
+      game.debug.renderSpriteBody(obj.hero);
+      game.debug.renderSpriteBody(obj.ball);
+
+      game.debug.renderRectangle(obj.controls);
+    }
+
+  }
+
+  window.onload = init;
+
+</script>
+</body>
+</html>
