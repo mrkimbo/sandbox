@@ -31,6 +31,7 @@
       backdrop: null,
       ball: null,
       hero: null,
+      info: null,
       controls: null
     }
     var dir, key, p, diff, input;
@@ -41,6 +42,11 @@
       game.load.atlas('hero', 'img/soccerman.png', 'img/soccerman.array.json');
       game.load.image('backdrop', 'img/backdrop.png');
       game.load.image('ball', 'img/ball.png');
+
+      if(isTouchEnabled())
+      {
+        game.load.atlas('controls', 'img/controls.png', 'img/controls.array.json');
+      }
     }
 
     function onLoadProgress()
@@ -54,6 +60,7 @@
 
       initWorld();
       renderGameElements();
+      addControls();
       startGame();
     }
 
@@ -64,18 +71,7 @@
       // only allow single touch input //
       game.input.maxPointers = 1;
 
-      input = {
-        left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
-        right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-        space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-        hold: game.input.onDown.add(onTouchPress, this),
-        release: game.input.onUp.add(onTouchRelease,this)
-      };
-
-      game.input.touch.callbackContext = this;
-      game.input.touch.touchStartCallback = onTouchPress;
-      game.input.touch.touchEndCallback = onTouchRelease;
-
+      // camera initial position //
       game.camera.x = (game.world.width-game.width)*.5;
     }
 
@@ -122,16 +118,62 @@
       obj.ball.body.customSeparateY = true;
       obj.ball.anchor.setTo(.5,.5);
 
-      var text = isTouchEnabled() ?
-        'Tap left and right edges to move\nTap center to kick' :
-        'Arrow keys to move\nSpace-bar to kick';
-      obj.controls = game.add.text(
-        0,15,text,{
-          font: '14px Verdana',
-          fill: '#FFCC00',
-          align: 'center'
+      if(!isTouchEnabled())
+      {
+        obj.info = game.add.text(
+          0,15,'Arrow keys to move\nSpace-bar to kick',{
+            font: '14px Verdana',
+            fill: '#FFCC00',
+            align: 'center'
+          }
+        );
+      }
+      else
+      {
+        obj.controlsLayer = game.add.group();
+        obj.controls = {
+          kick1: obj.controlsLayer.create(10,30,'controls'),
+          kick2: obj.controlsLayer.create(game.width - 130,30,'controls'),
+          left:  obj.controlsLayer.create(10,145,'controls'),
+          right:  obj.controlsLayer.create(game.width - 130,145,'controls')
+        };
+        obj.controls.kick1.frameName = 'kick';
+        obj.controls.kick2.frameName = 'kick';
+        obj.controls.left.frameName = 'left';
+        obj.controls.right.frameName = 'right';
+
+        for(var i in obj.controls)
+        {
+          obj.controls[i].inputEnabled = true;
+          obj.controls[i].alpha = .6;
+          obj.controls[i].scale.setTo(1.25,1.25);
         }
-      );
+      }
+    }
+
+    function addControls()
+    {
+      input = {};
+      if(isTouchEnabled())
+      {
+        obj.controls.left.events.onInputDown.add(onTouchPress,this);
+        obj.controls.left.events.onInputUp.add(onTouchRelease,this);
+
+        obj.controls.right.events.onInputDown.add(onTouchPress,this);
+        obj.controls.right.events.onInputUp.add(onTouchRelease,this);
+
+        obj.controls.kick1.events.onInputDown.add(onTouchPress,this);
+        obj.controls.kick1.events.onInputUp.add(onTouchRelease,this);
+
+        obj.controls.kick2.events.onInputDown.add(onTouchPress,this);
+        obj.controls.kick2.events.onInputUp.add(onTouchRelease,this);
+      }
+      else
+      {
+        input.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+        input.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        input.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+      }
     }
 
     function startGame()
@@ -178,33 +220,39 @@
       }
     }
 
-    function onTouchPress(evt)
+    function onTouchPress(target)
     {
-      config.touching = true;
-      if(evt.x < config.tapZoneWidth)
+      target.alpha = 1.0;
+      switch(target)
       {
-        key = Phaser.Keyboard.LEFT;
-      }
-      else if(evt.x < game.width-config.tapZoneWidth)
-      {
-        key = Phaser.Keyboard.SPACEBAR;
-      }
-      else
-      {
-        key = Phaser.Keyboard.RIGHT;
+        case obj.controls.left:
+          key = Phaser.Keyboard.LEFT;
+          break;
+
+        case obj.controls.right:
+          key = Phaser.Keyboard.RIGHT;
+          break;
+
+        case obj.controls.kick1:
+        case obj.controls.kick2:
+          key = Phaser.Keyboard.SPACEBAR;
+          break;
+
+        default:
+          key = null;
       }
     }
 
-    function onTouchRelease()
+    function onTouchRelease(target)
     {
-      config.touching = false;
+      target.alpha = .6;
       key = null;
     }
 
     function setKey()
     {
       // if already set by touch input, ignore any keyboard input //
-      if(config.touching) return;
+      if(isTouchEnabled()) return;
 
       if(currentAnim() != 'kick' && input.space.isDown)
       {
@@ -255,11 +303,16 @@
           break;
       }
 
-      // clear key //
-     // key = null;
-
       // update controls position so it appears to remain fixed //
-      obj.controls.x = game.camera.x + 20;
+
+      if(obj.info)
+      {
+        obj.info.x = game.camera.x + 20;
+      }
+      else
+      {
+        obj.controlsLayer.x = game.camera.x + 20;
+      }
     }
 
     function setHeroState()
