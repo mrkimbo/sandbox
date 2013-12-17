@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>Kick About</title>
   <script src="js/phaser.min.js"></script>
 </head>
 <body>
@@ -18,20 +18,22 @@
       update: update // pre-redraw
       //,render: render // post-redraw
     });
-    var LEFT = -1, RIGHT = 1
+    var LEFT = -1, RIGHT = 1;
     var config = {
       scroll_spd: 5,
       THROW_SPD: 800,
-      walking: false
+      walking: false,
+      tapZoneWidth: 200,
+      touching: false
     }
     var obj = {
-      fl4oor: null,
+      floor: null,
       backdrop: null,
       ball: null,
       hero: null,
       controls: null
     }
-    var dir, p, diff, input;
+    var dir, key, p, diff, input;
 
     function preload()
     {
@@ -59,11 +61,20 @@
     {
       game.world.setBounds(0,0,1000,256);
 
+      // only allow single touch input //
+      game.input.maxPointers = 1;
+
       input = {
         left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
         right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-        space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+        space: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+        hold: game.input.onDown.add(onTouchPress, this),
+        release: game.input.onUp.add(onTouchRelease,this)
       };
+
+      game.input.touch.callbackContext = this;
+      game.input.touch.touchStartCallback = onTouchPress;
+      game.input.touch.touchEndCallback = onTouchRelease;
 
       game.camera.x = (game.world.width-game.width)*.5;
     }
@@ -111,8 +122,11 @@
       obj.ball.body.customSeparateY = true;
       obj.ball.anchor.setTo(.5,.5);
 
+      var text = isTouchEnabled() ?
+        'Tap left and right edges to move\nTap center to kick' :
+        'Arrow keys to move\nSpace-bar to kick';
       obj.controls = game.add.text(
-        0,15,'Arrow keys to move\nSpace-bar to kick',{
+        0,15,text,{
           font: '14px Verdana',
           fill: '#FFCC00',
           align: 'center'
@@ -134,7 +148,7 @@
 
     function kickBall()
     {
-      walking = false;
+      config.walking = false;
 
       obj.hero.animations.play('kick');
       setTimeout(function(){
@@ -164,32 +178,88 @@
       }
     }
 
-    function handleInput()
+    function onTouchPress(evt)
     {
+      config.touching = true;
+      if(evt.x < config.tapZoneWidth)
+      {
+        key = Phaser.Keyboard.LEFT;
+      }
+      else if(evt.x < game.width-config.tapZoneWidth)
+      {
+        key = Phaser.Keyboard.SPACEBAR;
+      }
+      else
+      {
+        key = Phaser.Keyboard.RIGHT;
+      }
+    }
+
+    function onTouchRelease()
+    {
+      config.touching = false;
+      key = null;
+    }
+
+    function setKey()
+    {
+      // if already set by touch input, ignore any keyboard input //
+      if(config.touching) return;
+
       if(currentAnim() != 'kick' && input.space.isDown)
       {
-        kickBall();
+        key = Phaser.Keyboard.SPACEBAR;
+      }
+      else if(input.left.isDown)
+      {
+        key = Phaser.Keyboard.LEFT;
+      }
+      else if(input.right.isDown)
+      {
+        key = Phaser.Keyboard.RIGHT;
+      }
+      else
+      {
+        key = null;
+      }
+    }
+
+    function handleInput()
+    {
+      config.walking = false;
+
+      //log('handleInput() - key: ' + key);
+
+      switch(key)
+      {
+        case Phaser.Keyboard.SPACEBAR:
+          kickBall();
+          break;
+
+        case Phaser.Keyboard.LEFT:
+          game.camera.x -= config.scroll_spd;
+          obj.hero.x -= config.scroll_spd;
+          obj.hero.scale.x = -1;
+
+          if(obj.hero.x < 15) obj.hero.x = 15;
+          config.walking = true;
+          break;
+
+        case Phaser.Keyboard.RIGHT:
+          game.camera.x += config.scroll_spd;
+          obj.hero.x += config.scroll_spd;
+          obj.hero.scale.x = 1;
+
+          if(obj.hero.x > game.world.width-15) obj.hero.x = game.world.width-15;
+          config.walking = true;
+          break;
       }
 
-      if(input.left.isDown){
-        game.camera.x -= config.scroll_spd;
-        obj.hero.x -= config.scroll_spd;
-        obj.hero.scale.x = -1;
-
-        if(obj.hero.x < 15) obj.hero.x = 15;
-      }
-      if(input.right.isDown){
-        game.camera.x += config.scroll_spd;
-        obj.hero.x += config.scroll_spd;
-        obj.hero.scale.x = 1;
-
-        if(obj.hero.x > game.world.width-15) obj.hero.x = game.world.width-15;
-      }
+      // clear key //
+     // key = null;
 
       // update controls position so it appears to remain fixed //
       obj.controls.x = game.camera.x + 20;
-
-      config.walking = input.left.isDown || input.right.isDown;
     }
 
     function setHeroState()
@@ -210,6 +280,7 @@
 
     function update()
     {
+      setKey();
       handleInput();
       setHeroState();
 
@@ -264,6 +335,10 @@
       game.debug.renderRectangle(obj.controls);
     }
 
+    function isTouchEnabled()
+    {
+      return !!('ontouchstart' in window);
+    }
   }
 
   window.onload = init;
