@@ -1,0 +1,60 @@
+{"frames": [
+
+{
+	"filename": "ball",
+	"frame": {"x":0,"y":0,"w":133,"h":133},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":133},
+	"sourceSize": {"w":133,"h":133}
+},
+{
+	"filename": "cloud",
+	"frame": {"x":133,"y":0,"w":267,"h":179},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":267,"h":179},
+	"sourceSize": {"w":267,"h":179}
+},
+{
+	"filename": "dude",
+	"frame": {"x":400,"y":0,"w":178,"h":254},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":178,"h":254},
+	"sourceSize": {"w":178,"h":254}
+},
+{
+	"filename": "goal",
+	"frame": {"x":0,"y":254,"w":717,"h":350},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":717,"h":350},
+	"sourceSize": {"w":717,"h":350}
+},
+{
+	"filename": "life-empty",
+	"frame": {"x":717,"y":254,"w":38,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
+	"sourceSize": {"w":38,"h":38}
+},
+{
+	"filename": "life",
+	"frame": {"x":755,"y":254,"w":38,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
+	"sourceSize": {"w":38,"h":38}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "beat-the-goalie.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:2350e0ec36d87eeacf8ba0a5a2e6d045:236700b4d774d9c9cab45e6cbab4e2cc:ebd822cb0d1099c7240ec63539255526$"
+}
+}
