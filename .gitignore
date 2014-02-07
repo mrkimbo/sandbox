@@ -1,11 +1,4 @@
-javascript/canvas/rub-to-reveal/.idea
-javascript/parallax-scroll/.idea
-javascript/easelJS/sprite/.idea
+**/.idea
+**/node_modules
+**/deploy
 javascript/easelJS/sprite/*.swf
-javascript/9011-ALeague-iOS/node_modules
-javascript/9011-ALeague-iOS/src/.idea
-javascript/ashes-scroll-quiz/src/.idea
-javascript/ashes-scroll-quiz/deploy
-javascript/ashes-scroll-quiz/node_modules
-javascript/phaser/footyman/.idea
-javascript/phaser/hellophaser/.idea
